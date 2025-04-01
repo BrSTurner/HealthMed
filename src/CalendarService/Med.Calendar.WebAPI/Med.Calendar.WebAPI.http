@@ -1,0 +1,6 @@
+@Med.Calendar.WebAPI_HostAddress = http://localhost:5124
+
+GET {{Med.Calendar.WebAPI_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
