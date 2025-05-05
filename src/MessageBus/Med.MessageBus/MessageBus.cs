@@ -3,7 +3,7 @@ using Polly;
 
 namespace Med.MessageBus
 {
-    public class MessageBus
+    public class MessageBus : IMessageBus
     {
         private readonly IBusControl _busControl;
         private bool _isConnected;

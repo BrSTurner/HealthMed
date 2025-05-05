@@ -7,8 +7,8 @@ namespace Med.Infrastructure.Repositories
 {
     public abstract class BaseRepository<TEntity> : IRepository<TEntity> where TEntity : Entity, IAggregateRoot
     {
-        private readonly UserContext _context;
-        private readonly DbSet<TEntity> _entity;
+        protected readonly UserContext _context;
+        protected readonly DbSet<TEntity> _entity;
 
         public BaseRepository(UserContext context)
         {

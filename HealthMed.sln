@@ -65,13 +65,23 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Infrastructure", "Infrastru
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Med.Infrastructure", "src\CalendarService\Med.Infrastructure\Med.Infrastructure.csproj", "{C1B2B4EB-A958-4096-BDBD-8877A9E7B527}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Med.Authentication.WebAPI", "src\AuthenticationService\Med.Authentication.WebAPI\Med.Authentication.WebAPI.csproj", "{23DD6E6A-A7A6-4E58-8BAF-EB7C8ED7A46D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Med.Authentication.WebAPI", "src\AuthenticationService\Med.Authentication.WebAPI\Med.Authentication.WebAPI.csproj", "{23DD6E6A-A7A6-4E58-8BAF-EB7C8ED7A46D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Med.MessageBus", "src\MessageBus\Med.MessageBus\Med.MessageBus.csproj", "{AA6BD198-1BAA-4E1D-AA3D-397B8A5AF8FD}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Med.MessageBus", "src\MessageBus\Med.MessageBus\Med.MessageBus.csproj", "{AA6BD198-1BAA-4E1D-AA3D-397B8A5AF8FD}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Application", "Application", "{45F9E45C-43CF-4538-A838-9DCE5F002F32}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Med.Application", "src\UserService\Med.Application\Med.Application.csproj", "{5EA1D63E-3AA7-405D-8150-C0D4E096DC80}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Med.Application", "src\UserService\Med.Application\Med.Application.csproj", "{5EA1D63E-3AA7-405D-8150-C0D4E096DC80}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Application", "Application", "{4E5BE6ED-927A-4EF4-921C-61311B26F411}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Med.Application", "src\AuthenticationService\Med.Application\Med.Application.csproj", "{FDB5F7E8-C581-4293-BC81-C9FADACA3B56}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Infrastructure", "Infrastructure", "{3876E6E6-B018-463E-A16D-BEAB96166BD8}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Med.Infrastructure", "src\AuthenticationService\Med.Infrastructure\Med.Infrastructure.csproj", "{114A84DE-F13F-4E67-BEE6-1968014CE31A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Med.Migrator", "src\Migrator\Med.Migrator\Med.Migrator.csproj", "{9C26989A-81D3-43BD-86D8-1B85B727396D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -135,6 +145,18 @@ Global
 		{5EA1D63E-3AA7-405D-8150-C0D4E096DC80}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5EA1D63E-3AA7-405D-8150-C0D4E096DC80}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5EA1D63E-3AA7-405D-8150-C0D4E096DC80}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FDB5F7E8-C581-4293-BC81-C9FADACA3B56}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FDB5F7E8-C581-4293-BC81-C9FADACA3B56}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FDB5F7E8-C581-4293-BC81-C9FADACA3B56}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FDB5F7E8-C581-4293-BC81-C9FADACA3B56}.Release|Any CPU.Build.0 = Release|Any CPU
+		{114A84DE-F13F-4E67-BEE6-1968014CE31A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{114A84DE-F13F-4E67-BEE6-1968014CE31A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{114A84DE-F13F-4E67-BEE6-1968014CE31A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{114A84DE-F13F-4E67-BEE6-1968014CE31A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9C26989A-81D3-43BD-86D8-1B85B727396D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9C26989A-81D3-43BD-86D8-1B85B727396D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9C26989A-81D3-43BD-86D8-1B85B727396D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9C26989A-81D3-43BD-86D8-1B85B727396D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -173,6 +195,11 @@ Global
 		{AA6BD198-1BAA-4E1D-AA3D-397B8A5AF8FD} = {C09867CA-3183-4EC0-AAC5-F08D8919E870}
 		{45F9E45C-43CF-4538-A838-9DCE5F002F32} = {964C342B-9ED3-4002-AC13-222B0552322C}
 		{5EA1D63E-3AA7-405D-8150-C0D4E096DC80} = {45F9E45C-43CF-4538-A838-9DCE5F002F32}
+		{4E5BE6ED-927A-4EF4-921C-61311B26F411} = {E7562402-836D-41AC-B4AE-15B6162405FB}
+		{FDB5F7E8-C581-4293-BC81-C9FADACA3B56} = {4E5BE6ED-927A-4EF4-921C-61311B26F411}
+		{3876E6E6-B018-463E-A16D-BEAB96166BD8} = {E7562402-836D-41AC-B4AE-15B6162405FB}
+		{114A84DE-F13F-4E67-BEE6-1968014CE31A} = {3876E6E6-B018-463E-A16D-BEAB96166BD8}
+		{9C26989A-81D3-43BD-86D8-1B85B727396D} = {C09867CA-3183-4EC0-AAC5-F08D8919E870}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {B905B996-3719-4576-9718-6A9CA5492322}

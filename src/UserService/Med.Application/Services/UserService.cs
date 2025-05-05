@@ -48,13 +48,18 @@ namespace Med.Application.Services
                 return creationResult;
 
             if(await _unitOfWork.SaveChanges())
-                return DomainResult.Success();
+                return DomainResult.Success(creationResult);
 
             return DomainResult.Error("Nao foi possivel criar o usuario");
         }        
 
         private async Task<DomainResult> CreateDoctor(CreateUserInput input)
         {
+            var existentDoctor = await _doctorRepository.GetDoctorByCRM(input.CRM ?? string.Empty);
+
+            if (existentDoctor != null)
+                return DomainResult.Error("CRM já registrado anteriormente");
+
             var request = CreateAuthenticationUserRequest(input);
             var response = await CreateAuthenticationUser(request);
 
@@ -65,7 +70,7 @@ namespace Med.Application.Services
                     UserId = response.UserId,
                     Name = input.Name,
                     SpecialityId = input.SpecialityId ?? Guid.Empty,
-                    CRM = CRM.Create(input.CRM),
+                    CRM = CRM.Create(input.CRM ?? string.Empty),
                 };
 
                 await _doctorRepository.AddAsync(doctor);
@@ -76,6 +81,16 @@ namespace Med.Application.Services
 
         private async Task<DomainResult> CreatePatient(CreateUserInput input)
         {
+            var existentPatient = await _patientRepository.GetPatientByCPFAsync(input.CPF ?? string.Empty);
+
+            if (existentPatient != null)
+                return DomainResult.Error("CPF já registrado anteriormente");
+
+            existentPatient = await _patientRepository.GetPatientByEmailAsync(input.Email ?? string.Empty);
+
+            if (existentPatient != null)
+                return DomainResult.Error("E-mail já registrado anteriormente");
+
             var request = CreateAuthenticationUserRequest(input);
             var response = await CreateAuthenticationUser(request);
 
@@ -85,7 +100,7 @@ namespace Med.Application.Services
                 {
                     UserId = response.UserId,
                     Name = input.Name,
-                    CPF = CPF.Create(input.CPF),
+                    CPF = CPF.Create(input.CPF ?? string.Empty),
                     Email = Email.Create(input.Email),
                 };
 

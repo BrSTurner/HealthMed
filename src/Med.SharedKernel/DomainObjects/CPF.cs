@@ -2,27 +2,28 @@
 
 namespace Med.SharedKernel.DomainObjects
 {
-    public sealed partial class CPF
+    public partial class CPF
     {
-        private static readonly Regex CPFValidator = RegexValidator();
-
-        public string Number { get; }
-
-        private CPF(string value)
+        public string Number { get; set; }
+        
+        protected CPF() 
         {
+            Number = string.Empty;
+        }
+
+        public CPF(string value)
+        {
+            if (string.IsNullOrWhiteSpace(value))
+                throw new ArgumentException("CPF não pode ser vazio.");
+
+            if (!CPFRegex().IsMatch(value) || !IsValidCpf(value))
+                throw new ArgumentException("CPF inválido.");
+
             Number = value;
         }
 
-        public static CPF Create(string? number)
-        {
-            if (string.IsNullOrWhiteSpace(number))
-                throw new ArgumentException("CPF não pode ser vazio.");
-
-            if (!CPFValidator.IsMatch(number) || !IsValidCpf(number))
-                throw new ArgumentException("CPF inválido.");
-
-            return new CPF(number);
-        }
+        public static CPF Create(string number) 
+            => new (number);        
 
         private static bool IsValidCpf(string cpf)
         {
@@ -52,7 +53,7 @@ namespace Med.SharedKernel.DomainObjects
 
         public override int GetHashCode() => Number.GetHashCode();
 
-        [GeneratedRegex(@"^\d{3}\.\d{3}\.\d{3}\-\d{2}$", RegexOptions.Compiled)]
-        private static partial Regex RegexValidator();
+        [GeneratedRegex(@"^\d{3}\.\d{3}\.\d{3}\-\d{2}$")]
+        private static partial Regex CPFRegex();
     }
 }

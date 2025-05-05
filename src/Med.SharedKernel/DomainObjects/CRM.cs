@@ -2,27 +2,28 @@
 
 namespace Med.SharedKernel.DomainObjects
 {
-    public sealed partial class CRM
+    public partial class CRM
     {
-        private static readonly Regex CRMValidator = RegexValidator();
+        public string Number { get; set; }
 
-        public string Number { get; }
-
-        private CRM(string value)
+        protected CRM()
         {
+            Number = string.Empty;
+        }
+
+        public CRM(string value)
+        {
+            if (string.IsNullOrWhiteSpace(value))
+                throw new ArgumentException("CRM não pode ser vazio.");
+
+            if (!CRMRegex().IsMatch(value))
+                throw new ArgumentException("CRM inválido. Formato esperado: 123456/SP");
+
             Number = value;
         }
 
-        public static CRM Create(string? number)
-        {
-            if (string.IsNullOrWhiteSpace(number))
-                throw new ArgumentException("CRM não pode ser vazio.");
-
-            if (!CRMValidator.IsMatch(number))
-                throw new ArgumentException("CRM inválido. Formato esperado: 123456/SP");
-
-            return new CRM(number);
-        }
+        public static CRM Create(string number) 
+            => new (number);        
 
         public override string ToString() => Number;
 
@@ -30,7 +31,7 @@ namespace Med.SharedKernel.DomainObjects
 
         public override int GetHashCode() => Number.GetHashCode();
 
-        [GeneratedRegex(@"^\d{4,6}\/[A-Z]{2}$", RegexOptions.Compiled)]
-        private static partial Regex RegexValidator();
+        [GeneratedRegex(@"^\d{4,6}\/[A-Z]{2}$")]
+        private static partial Regex CRMRegex();
     }
 }

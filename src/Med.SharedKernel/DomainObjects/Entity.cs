@@ -1,10 +1,7 @@
 ﻿namespace Med.SharedKernel.DomainObjects
 {
-    public abstract class Entity
+    public abstract class Entity : CustomEntity<Guid>
     {
-        public Guid Id { get; set; }
-        public DateTime CreatedAt { get; set; }
-
         protected Entity()
         {
             Id = Guid.NewGuid();

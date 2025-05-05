@@ -1,13 +1,24 @@
+using Med.Application.Extensions;
+using Med.Application.Interfaces.Services;
+using Med.Authentication.WebAPI.Inputs;
+using Med.Infrastructure.Data;
+using Med.Infrastructure.Extensions;
+using Med.MessageBus.Extensions;
+using Med.Migrator;
+using Microsoft.AspNetCore.Http.HttpResults;
+
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+builder.Services.AddApplication(builder.Configuration);
+builder.Services.AddInfrastructure(builder.Configuration, false);
+builder.Services.AddMessageBus();
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
+DatabaseMigrator.MigrateDatabase<AuthContext>(app);
+
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
@@ -16,29 +27,24 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
-var summaries = new[]
-{
-    "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
-};
+var group = app.MapGroup("/api/auth");
 
-app.MapGet("/weatherforecast", () =>
+group.MapPost("Login", async (AuthenticateInput input, IAuthService authService) =>
 {
-    var forecast = Enumerable.Range(1, 5).Select(index =>
-        new WeatherForecast
-        (
-            DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
-            Random.Shared.Next(-20, 55),
-            summaries[Random.Shared.Next(summaries.Length)]
-        ))
-        .ToArray();
-    return forecast;
+    if (input is null)
+        return Results.BadRequest();
+
+    var token = await authService.Authenticate(input.UsernameOrEmail, input.Password);
+
+    if(token is null)
+        return Results.Unauthorized();
+    
+    return Results.Ok(token);
 })
-.WithName("GetWeatherForecast")
-.WithOpenApi();
+.WithTags("Auth")
+.WithName("Login")
+.Produces<Ok>()
+.Produces<UnauthorizedHttpResult>()
+.Produces<BadRequest>();
 
 app.Run();
-
-internal record WeatherForecast(DateOnly Date, int TemperatureC, string? Summary)
-{
-    public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);
-}
