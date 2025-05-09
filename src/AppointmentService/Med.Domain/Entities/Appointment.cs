@@ -3,7 +3,7 @@ using Med.SharedKernel.DomainObjects;
 
 namespace Med.Domain.Entities
 {
-    public class Appointment : Entity
+    public class Appointment : Entity, IAggregateRoot
     {
         public required Guid DoctorId { get; set; }
         public required Guid PatientId { get; set; }

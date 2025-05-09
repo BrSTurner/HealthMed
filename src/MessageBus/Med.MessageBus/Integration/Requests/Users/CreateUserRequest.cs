@@ -1,5 +1,4 @@
-﻿using Med.SharedKernel.DomainObjects;
-using Med.SharedKernel.Enumerations;
+﻿using Med.SharedKernel.Enumerations;
 
 namespace Med.MessageBus.Integration.Requests.Users
 {

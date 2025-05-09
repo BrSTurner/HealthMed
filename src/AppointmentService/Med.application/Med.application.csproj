@@ -1,0 +1,15 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\MessageBus\Med.MessageBus\Med.MessageBus.csproj" />
+    <ProjectReference Include="..\Med.Domain\Med.Domain.csproj" />
+    <ProjectReference Include="..\Med.Infrastructure\Med.Infrastructure.csproj" />
+  </ItemGroup>
+
+</Project>

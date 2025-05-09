@@ -49,11 +49,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Domain", "Domain", "{683E2B
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Med.Domain", "src\CalendarService\Med.Domain\Med.Domain.csproj", "{A1CBDB6D-CA32-41AB-833C-1001A3FDE3B8}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Med.Calendar.WebAPI", "src\CalendarService\Med.Calendar.WebAPI\Med.Calendar.WebAPI.csproj", "{94B93529-9B8E-4BA3-8B93-49AD9500B1E2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Med.WebAPI", "src\CalendarService\Med.Calendar.WebAPI\Med.WebAPI.csproj", "{94B93529-9B8E-4BA3-8B93-49AD9500B1E2}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Med.Domain", "src\AppointmentService\Med.Domain\Med.Domain.csproj", "{CC053FFF-E699-44F4-8691-827686DB8A22}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Med.Appointment.WebAPI", "src\AppointmentService\Med.Appointment.WebAPI\Med.Appointment.WebAPI.csproj", "{62D23ECB-ECE3-4F26-866A-B88AF81EC1A5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Med.WebAPI", "src\AppointmentService\Med.Appointment.WebAPI\Med.WebAPI.csproj", "{62D23ECB-ECE3-4F26-866A-B88AF81EC1A5}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Infrastructure", "Infrastructure", "{A11E34A9-6434-40C0-B1B1-365B56277662}"
 EndProject
@@ -81,7 +81,19 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Infrastructure", "Infrastru
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Med.Infrastructure", "src\AuthenticationService\Med.Infrastructure\Med.Infrastructure.csproj", "{114A84DE-F13F-4E67-BEE6-1968014CE31A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Med.Migrator", "src\Migrator\Med.Migrator\Med.Migrator.csproj", "{9C26989A-81D3-43BD-86D8-1B85B727396D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Med.Migrator", "src\Migrator\Med.Migrator\Med.Migrator.csproj", "{9C26989A-81D3-43BD-86D8-1B85B727396D}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Application", "Application", "{D4E9D738-1CB6-4C4F-9309-B75A65102F90}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Application", "Application", "{FC6BF756-4CA0-49F4-B74D-2057737617AF}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Med.application", "src\AppointmentService\Med.application\Med.application.csproj", "{B4E3DED0-44C8-448D-8359-EAD2225110F6}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Infrastructure", "Infrastructure", "{11D655F3-DAAF-43A6-AA1B-B0A92E25F232}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Med.Infrastructure", "src\AppointmentService\Med.Infrastructure\Med.Infrastructure.csproj", "{D6F91A2B-71F9-45BA-90A2-95DD4F7A41C2}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Med.Application", "src\CalendarService\Med.Application\Med.Application.csproj", "{B63C35D2-D3E7-438C-98D9-515FC1E69767}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -157,6 +169,18 @@ Global
 		{9C26989A-81D3-43BD-86D8-1B85B727396D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9C26989A-81D3-43BD-86D8-1B85B727396D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9C26989A-81D3-43BD-86D8-1B85B727396D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B4E3DED0-44C8-448D-8359-EAD2225110F6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B4E3DED0-44C8-448D-8359-EAD2225110F6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B4E3DED0-44C8-448D-8359-EAD2225110F6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B4E3DED0-44C8-448D-8359-EAD2225110F6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D6F91A2B-71F9-45BA-90A2-95DD4F7A41C2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D6F91A2B-71F9-45BA-90A2-95DD4F7A41C2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D6F91A2B-71F9-45BA-90A2-95DD4F7A41C2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D6F91A2B-71F9-45BA-90A2-95DD4F7A41C2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B63C35D2-D3E7-438C-98D9-515FC1E69767}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B63C35D2-D3E7-438C-98D9-515FC1E69767}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B63C35D2-D3E7-438C-98D9-515FC1E69767}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B63C35D2-D3E7-438C-98D9-515FC1E69767}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -200,6 +224,12 @@ Global
 		{3876E6E6-B018-463E-A16D-BEAB96166BD8} = {E7562402-836D-41AC-B4AE-15B6162405FB}
 		{114A84DE-F13F-4E67-BEE6-1968014CE31A} = {3876E6E6-B018-463E-A16D-BEAB96166BD8}
 		{9C26989A-81D3-43BD-86D8-1B85B727396D} = {C09867CA-3183-4EC0-AAC5-F08D8919E870}
+		{D4E9D738-1CB6-4C4F-9309-B75A65102F90} = {5FF39FBE-EF87-4094-99AC-94E60C0C0520}
+		{FC6BF756-4CA0-49F4-B74D-2057737617AF} = {5C8B95A2-2DD5-4D7A-97E4-A31791289516}
+		{B4E3DED0-44C8-448D-8359-EAD2225110F6} = {FC6BF756-4CA0-49F4-B74D-2057737617AF}
+		{11D655F3-DAAF-43A6-AA1B-B0A92E25F232} = {5C8B95A2-2DD5-4D7A-97E4-A31791289516}
+		{D6F91A2B-71F9-45BA-90A2-95DD4F7A41C2} = {11D655F3-DAAF-43A6-AA1B-B0A92E25F232}
+		{B63C35D2-D3E7-438C-98D9-515FC1E69767} = {D4E9D738-1CB6-4C4F-9309-B75A65102F90}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {B905B996-3719-4576-9718-6A9CA5492322}

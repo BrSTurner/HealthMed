@@ -4,7 +4,7 @@
     <TargetFramework>net8.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
-    <UserSecretsId>13521b7e-032e-4886-8ef4-b42a6914b32f</UserSecretsId>
+    <UserSecretsId>5b8dd6b1-23a2-430b-843d-01f157221434</UserSecretsId>
     <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
     <DockerfileContext>..\..\..</DockerfileContext>
   </PropertyGroup>
@@ -13,6 +13,11 @@
     <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="8.0.5" />
     <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.20.1" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.4.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Med.Application\Med.Application.csproj" />
+    <ProjectReference Include="..\Med.Infrastructure\Med.Infrastructure.csproj" />
   </ItemGroup>
 
 </Project>
