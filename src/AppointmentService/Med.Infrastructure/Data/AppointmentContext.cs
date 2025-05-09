@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Med.Infrastructure.Mapping;
+using Microsoft.EntityFrameworkCore;
 using System.Data.Common;
 
 namespace Med.Infrastructure.Data
@@ -16,6 +17,8 @@ namespace Med.Infrastructure.Data
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
+
+            modelBuilder.ApplyConfiguration(new AppointmentMapping());
         }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)

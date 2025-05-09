@@ -17,9 +17,11 @@ namespace Med.Infrastructure.Repositories
 
         public async Task<User?> GetByEmailOrUsernameAsync(string username, string email)
         {
-            return await _users.FirstOrDefaultAsync(u => 
-                u.Username.ToLower() ==  username.ToLower() || (!string.IsNullOrEmpty(email) && 
-                u.Email.Address.ToLower() == email.ToLower()));
+            return await _users
+                .Include(u => u.Roles)
+                .FirstOrDefaultAsync(u => 
+                    u.Username.ToLower() ==  username.ToLower() || (!string.IsNullOrEmpty(email) && 
+                    u.Email.Address.ToLower() == email.ToLower()));
         }
     }
 }

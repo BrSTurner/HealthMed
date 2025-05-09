@@ -129,7 +129,7 @@ namespace Med.Application.Services
         private static DomainResult CreateResponse(CreateUserResponse? response) 
         {
             return response != null ? 
-                DomainResult.Create(response.Success, [response.ErrorMessage ?? string.Empty], new { response.Token, response.UserId }) :
+                DomainResult.Create(response.Success, [response.ErrorMessage ?? string.Empty], response.Success ? response : null) :
                 DomainResult.Error("Nao foi possivel criar o usuario");
         }
 

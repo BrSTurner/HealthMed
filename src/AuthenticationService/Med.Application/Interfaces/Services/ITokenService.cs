@@ -4,6 +4,6 @@ namespace Med.Application.Interfaces.Services
 {
     public interface ITokenService
     {
-        string GenerateToken(User user);
+        string GenerateToken(User user, List<Role> roles);
     }
 }

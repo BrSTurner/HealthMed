@@ -17,7 +17,6 @@ namespace Med.Infrastructure.Mapping
             builder.HasMany(x => x.UserRoles)
                 .WithOne(x => x.Role)
                 .HasForeignKey(x => x.RoleId)
-                .HasPrincipalKey(x => x.Id)
                 .OnDelete(DeleteBehavior.Restrict);
         }
     }

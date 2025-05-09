@@ -14,6 +14,14 @@ namespace Med.Infrastructure.Mapping
 
             builder.Property(x => x.UserId).IsRequired();
             builder.Property(x => x.RoleId).IsRequired();
+
+            builder.HasOne(x => x.Role)
+                .WithMany(x => x.UserRoles)
+                .HasForeignKey(x => x.RoleId);
+
+            builder.HasOne(x => x.User)
+               .WithMany(x => x.Roles)
+               .HasForeignKey(x => x.UserId);
         }
     }
 }

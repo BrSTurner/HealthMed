@@ -6,6 +6,7 @@ using Med.Infrastructure.Extensions;
 using Med.MessageBus.Extensions;
 using Med.MessageBus.Integration.Responses.Users;
 using Med.Migrator;
+using Med.SharedAuth;
 using Microsoft.AspNetCore.Http.HttpResults;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -13,8 +14,9 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddApplication(builder.Configuration);
-builder.Services.AddInfrastructure(builder.Configuration, true);
+builder.Services.AddInfrastructure(builder.Configuration, false);
 builder.Services.AddMessageBus();
+builder.Services.AddAuthorizationServices(builder.Configuration);
 
 var app = builder.Build();
 
@@ -47,5 +49,8 @@ group.MapPost("Create", async (CreateUserInput input, IUserService userService) 
 .WithName("Login")
 .Produces<Created>()
 .Produces<BadRequest>();
+
+app.UseAuthentication();
+app.UseAuthorization();
 
 app.Run();

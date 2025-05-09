@@ -36,9 +36,12 @@ namespace Med.Application.Services
             return DomainResult.Error("Nao foi possivel criar a calendario!");
         }
 
-        public async Task<CalendarDTO> GetAvailableCalendarsByDoctor(Guid doctorId)
+        public async Task<CalendarDTO?> GetAvailableCalendarsByDoctor(Guid doctorId)
         {
             var entity = await _calendarRepository.GetCalendarByDoctor(doctorId);
+
+            if (entity == null)
+                return null;
 
             var dto = new CalendarDTO
             {
