@@ -110,6 +110,11 @@ namespace Med.Application.Services
             return CreateResponse(response);
         }
 
+        public async Task<Doctor?> GetDoctorByCrm(CRM crm)
+        {
+            return await _doctorRepository.GetDoctorByCRM(crm.Number);
+        }
+
         private static CreateUserRequest CreateAuthenticationUserRequest(CreateUserInput input)
         {
             return new CreateUserRequest 

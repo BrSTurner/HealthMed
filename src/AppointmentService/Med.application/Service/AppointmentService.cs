@@ -3,6 +3,10 @@ using Med.Domain.Entities;
 using Med.Domain.Enumerations;
 using Med.Domain.Repositories;
 using Med.MessageBus;
+using Med.MessageBus.Integration.Requests.Appointments;
+using Med.MessageBus.Integration.Requests.Calendars;
+using Med.MessageBus.Integration.Responses.Calendars;
+using Med.SharedKernel.DomainObjects;
 using Med.SharedKernel.Models;
 using Med.SharedKernel.UoW;
 
@@ -32,13 +36,31 @@ namespace Med.Application.Services
         {
             ArgumentNullException.ThrowIfNull(input);
 
-            //var GetDoctorEvent = new GetDoctorIntegrationEvent(input.DoctorId);
+            var getDoctorRequest = new GetDoctorByAppointmentRequest
+            {
+                Crm = new CRM(input.Crm)
+            };
 
-            //await _bus.PublishAsync(GetDoctorEvent);
+            var doctorResponse = await GetDoctorByAppointment(getDoctorRequest);
+            if (!doctorResponse.Success)
+            {
+                return DomainResult.Error(doctorResponse.ErrorMessage);
+            }
+
+            var checkCalendarRequest = new UpdateCalendarIfAvailableRequest
+            {
+                Date = input.Date,
+            };
+
+            var calendarResponse = await UpdateCalendarIfAvailable(checkCalendarRequest);
+            if (!calendarResponse.Success)
+            {
+                return DomainResult.Error(calendarResponse.ErrorMessage);
+            }
 
             var appointment = new Appointment
             {
-                DoctorId = input.DoctorId,
+                DoctorId = doctorResponse.DoctorId,
                 PatientId = input.PatientId,
                 Date = input.Date,
                 Status = AppointmentStatus.Pending
@@ -63,5 +85,11 @@ namespace Med.Application.Services
 
             await _unitOfWork.SaveChanges();
         }
+
+        private async Task<GetDoctorByAppointmentResponse> GetDoctorByAppointment(GetDoctorByAppointmentRequest request)
+            => await _bus.RequestAsync<GetDoctorByAppointmentRequest, GetDoctorByAppointmentResponse>(request);
+
+        private async Task<UpdateCalendarIfAvailableResponse> UpdateCalendarIfAvailable(UpdateCalendarIfAvailableRequest request)
+            => await _bus.RequestAsync<UpdateCalendarIfAvailableRequest, UpdateCalendarIfAvailableResponse>(request);
     }
 }

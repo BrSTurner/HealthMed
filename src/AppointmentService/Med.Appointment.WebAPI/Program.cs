@@ -1,11 +1,17 @@
+using Med.Application.Extensions;
 using Med.Application.Models;
 using Med.Application.Services;
+using Med.Infrastructure.Extensions;
 using Microsoft.AspNetCore.Http.HttpResults;
+using Med.MessageBus.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+builder.Services.AddApplication(builder.Configuration);
+builder.Services.AddInfrastructure(builder.Configuration, true);
+builder.Services.AddMessageBus();
 
 var app = builder.Build();
 
@@ -18,7 +24,7 @@ if (app.Environment.IsDevelopment())
 var endpointGroup = app
     .MapGroup("api/appointments");
 
-endpointGroup.MapPatch(string.Empty, (ReplyAppointmentInput replyAppointment, IAppointmentService appointmentService) =>
+endpointGroup.MapPatch("reply/", (ReplyAppointmentInput replyAppointment, IAppointmentService appointmentService) =>
 {
     appointmentService.ReplyAppointment(replyAppointment);
     return Results.Ok();
@@ -38,7 +44,7 @@ endpointGroup.MapPost(string.Empty, (CreateAppointmentInput createAppointment, I
 .Produces<Created<Guid>>()
 .Produces<BadRequest>();
 
-endpointGroup.MapPatch(string.Empty, (CancelAppointmentInput cancelAppointment, IAppointmentService appointmentService) =>
+endpointGroup.MapPatch("cancel/", (CancelAppointmentInput cancelAppointment, IAppointmentService appointmentService) =>
 {
     appointmentService.CancelAppointment(cancelAppointment);
     return Results.Ok();

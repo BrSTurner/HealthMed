@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
@@ -16,8 +16,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\..\Med.Appoint.Application\Med.Application.csproj" />
     <ProjectReference Include="..\Med.application\Med.application.csproj" />
+    <ProjectReference Include="..\Med.Infrastructure\Med.Infrastructure.csproj" />
   </ItemGroup>
 
 </Project>

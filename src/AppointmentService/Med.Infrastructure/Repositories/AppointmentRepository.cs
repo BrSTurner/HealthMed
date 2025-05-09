@@ -19,9 +19,9 @@ namespace Med.Domain.Repositories
             return await _entity.FindAsync(id);
         }
 
-        public async void AddAppointmentAsync(Appointment doctor)
+        public async void AddAppointmentAsync(Appointment appointment)
         {
-            await _entity.AddAsync(doctor);
+            await _entity.AddAsync(appointment);
         }
     }
 }

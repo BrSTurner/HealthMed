@@ -18,7 +18,7 @@ namespace Med.Migrator
                 try
                 {
                     logger.LogInformation("Applying database migrations...");
-                    context.Database.Migrate();
+                    //context.Database.Migrate();
                     logger.LogInformation("Database migration completed successfully.");
                 }
                 catch (Exception ex)

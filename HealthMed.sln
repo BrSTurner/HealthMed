@@ -87,13 +87,13 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Application", "Application"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Application", "Application", "{FC6BF756-4CA0-49F4-B74D-2057737617AF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Med.application", "src\AppointmentService\Med.application\Med.application.csproj", "{B4E3DED0-44C8-448D-8359-EAD2225110F6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Med.application", "src\AppointmentService\Med.application\Med.application.csproj", "{B4E3DED0-44C8-448D-8359-EAD2225110F6}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Infrastructure", "Infrastructure", "{11D655F3-DAAF-43A6-AA1B-B0A92E25F232}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Med.Infrastructure", "src\AppointmentService\Med.Infrastructure\Med.Infrastructure.csproj", "{D6F91A2B-71F9-45BA-90A2-95DD4F7A41C2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Med.Infrastructure", "src\AppointmentService\Med.Infrastructure\Med.Infrastructure.csproj", "{D6F91A2B-71F9-45BA-90A2-95DD4F7A41C2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Med.Application", "src\CalendarService\Med.Application\Med.Application.csproj", "{B63C35D2-D3E7-438C-98D9-515FC1E69767}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Med.Application", "src\CalendarService\Med.Application\Med.Application.csproj", "{B63C35D2-D3E7-438C-98D9-515FC1E69767}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

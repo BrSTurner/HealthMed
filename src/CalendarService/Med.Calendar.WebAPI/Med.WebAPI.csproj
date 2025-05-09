@@ -16,8 +16,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\..\Med.Calendar.Application\Med.Application.csproj" />
     <ProjectReference Include="..\Med.Application\Med.Application.csproj" />
+    <ProjectReference Include="..\Med.Infrastructure\Med.Infrastructure.csproj" />
   </ItemGroup>
 
 </Project>

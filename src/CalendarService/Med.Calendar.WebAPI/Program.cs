@@ -1,11 +1,17 @@
 using Med.Application.Models;
 using Med.Application.Services;
+using Med.Application.Extensions;
+using Med.MessageBus.Extensions;
 using Microsoft.AspNetCore.Http.HttpResults;
+using Med.Infrastructure.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+builder.Services.AddApplication(builder.Configuration);
+builder.Services.AddInfrastructure(builder.Configuration, true);
+builder.Services.AddMessageBus();
 
 var app = builder.Build();
 
@@ -25,6 +31,16 @@ endpointGroup.MapPost(string.Empty, (CreateDoctorCalendarInput createDoctorCalen
 })
 .WithTags("Calendar")
 .WithName("Create Calendar For the Doctor")
+.Produces<Created<Guid>>()
+.Produces<BadRequest>();
+
+endpointGroup.MapPut(string.Empty, (UpdateDoctorCalendarInput updateDoctorCalendarInput, ICalendarService calendarService) =>
+{
+    calendarService.UpdateDoctorCalendar(updateDoctorCalendarInput);
+    return Results.Ok();
+})
+.WithTags("Calendar")
+.WithName("Update Calendar For the Doctor")
 .Produces<Created<Guid>>()
 .Produces<BadRequest>();
 

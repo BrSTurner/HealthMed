@@ -13,11 +13,11 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Integration\Events\" />
+    <ProjectReference Include="..\..\Med.SharedKernel\Med.SharedKernel.csproj" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\Med.SharedKernel\Med.SharedKernel.csproj" />
+    <Folder Include="Integration\Events\" />
   </ItemGroup>
 
 </Project>
