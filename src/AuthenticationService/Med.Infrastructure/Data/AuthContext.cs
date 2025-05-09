@@ -1,6 +1,6 @@
 ﻿using Med.Domain.Entities;
-using Med.Domain.Enumerations;
 using Med.Infrastructure.Mapping;
+using Med.Infrastructure.Seeding;
 using Microsoft.EntityFrameworkCore;
 using System.Data.Common;
 
@@ -24,12 +24,7 @@ namespace Med.Infrastructure.Data
             modelBuilder.ApplyConfiguration(new RoleMapping());
             modelBuilder.ApplyConfiguration(new UserRoleMapping());
 
-            modelBuilder.Entity<Role>().HasData
-            (
-                new Role { Id = (int)RolesEnum.Admin, Name = "Admin", CreatedAt = new DateTime(2025, 05, 05, 00, 00, 00) },
-                new Role { Id = (int)RolesEnum.Doctor, Name = "Doctor", CreatedAt = new DateTime(2025, 05, 05, 00, 00, 00) },
-                new Role { Id = (int)RolesEnum.Patient, Name = "Patient", CreatedAt = new DateTime(2025, 05, 05, 00, 00, 00) }
-            );
+            modelBuilder.Entity<Role>().HasData(RoleSeeding.Roles);
         }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
