@@ -90,61 +90,61 @@ namespace Med.Infrastructure.Migrations
                         new
                         {
                             Id = new Guid("4a4c0f8e-b28b-4e1b-a4ea-5a4b79fd9b6c"),
-                            CreatedAt = new DateTime(2025, 5, 7, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedAt = new DateTime(2025, 5, 7, 0, 0, 0, 0, DateTimeKind.Utc),
                             Name = "Cardiologia"
                         },
                         new
                         {
                             Id = new Guid("2c9d2f77-6c1e-4b47-83f0-f2d1ab3147f5"),
-                            CreatedAt = new DateTime(2025, 5, 7, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedAt = new DateTime(2025, 5, 7, 0, 0, 0, 0, DateTimeKind.Utc),
                             Name = "Dermatologia"
                         },
                         new
                         {
                             Id = new Guid("9d3b5c38-61c4-4bc6-b9ea-3acdb148c1ee"),
-                            CreatedAt = new DateTime(2025, 5, 7, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedAt = new DateTime(2025, 5, 7, 0, 0, 0, 0, DateTimeKind.Utc),
                             Name = "Ortopedia"
                         },
                         new
                         {
                             Id = new Guid("79c5e160-9de3-446a-b44c-9b6a982cc4f0"),
-                            CreatedAt = new DateTime(2025, 5, 7, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedAt = new DateTime(2025, 5, 7, 0, 0, 0, 0, DateTimeKind.Utc),
                             Name = "Neurologia"
                         },
                         new
                         {
                             Id = new Guid("87d7a295-0a4e-4c88-9367-0d83a746e6a7"),
-                            CreatedAt = new DateTime(2025, 5, 7, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedAt = new DateTime(2025, 5, 7, 0, 0, 0, 0, DateTimeKind.Utc),
                             Name = "Endocrinologia"
                         },
                         new
                         {
                             Id = new Guid("5811db18-b55b-4f34-95cf-11f3f0f89193"),
-                            CreatedAt = new DateTime(2025, 5, 7, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedAt = new DateTime(2025, 5, 7, 0, 0, 0, 0, DateTimeKind.Utc),
                             Name = "Ginecologia e Obstetrícia"
                         },
                         new
                         {
                             Id = new Guid("fde82618-bb0d-4a27-b232-3d3c204f00b4"),
-                            CreatedAt = new DateTime(2025, 5, 7, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedAt = new DateTime(2025, 5, 7, 0, 0, 0, 0, DateTimeKind.Utc),
                             Name = "Psiquiatria"
                         },
                         new
                         {
                             Id = new Guid("3f4a6e72-e22c-4ae0-ae7e-7201c6ddc9c2"),
-                            CreatedAt = new DateTime(2025, 5, 7, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedAt = new DateTime(2025, 5, 7, 0, 0, 0, 0, DateTimeKind.Utc),
                             Name = "Pediatria"
                         },
                         new
                         {
                             Id = new Guid("b2bc226c-96d3-401f-88e2-70e62f66ae8f"),
-                            CreatedAt = new DateTime(2025, 5, 7, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedAt = new DateTime(2025, 5, 7, 0, 0, 0, 0, DateTimeKind.Utc),
                             Name = "Gastroenterologia"
                         },
                         new
                         {
                             Id = new Guid("a8e05346-29e6-4f30-94e2-e4ecf77b0d4b"),
-                            CreatedAt = new DateTime(2025, 5, 7, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedAt = new DateTime(2025, 5, 7, 0, 0, 0, 0, DateTimeKind.Utc),
                             Name = "Urologia"
                         });
                 });

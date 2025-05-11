@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: appointment-webapi-service
+  namespace: healthmed
+  labels:     
+    monitored: "true"  
+spec:
+  type: LoadBalancer
+  selector:
+    app: appointment-webapi
+  ports:
+    - name: metrics
+      port: 83
+      targetPort: 8081

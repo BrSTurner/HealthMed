@@ -13,12 +13,18 @@ using Microsoft.AspNetCore.Http.HttpResults;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Configuration.AddEnvironmentVariables();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddApplication(builder.Configuration);
 builder.Services.AddInfrastructure(builder.Configuration, false);
 builder.Services.AddMessageBus();
 builder.Services.AddAuthorizationServices(builder.Configuration);
+
+builder.WebHost.ConfigureKestrel(options =>
+{
+    options.ListenAnyIP(8081);
+});
 
 var app = builder.Build();
 

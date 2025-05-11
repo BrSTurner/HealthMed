@@ -9,7 +9,6 @@ namespace Med.SharedAuth
     {
         public static void AddAuthorizationServices(this IServiceCollection services, IConfiguration configuration)
         {
-
             services.AddAuthentication("Bearer")
                 .AddJwtBearer("Bearer", options =>
                 {

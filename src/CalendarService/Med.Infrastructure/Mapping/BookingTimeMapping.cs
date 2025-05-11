@@ -2,6 +2,7 @@
 using Med.Domain.Enumerations;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Med.Infrastructure.Mapping
 {
@@ -9,6 +10,9 @@ namespace Med.Infrastructure.Mapping
     {
         public void Configure(EntityTypeBuilder<BookingTime> builder)
         {
+
+            builder.Property(x => x.CreatedAt);
+
             builder.ToTable("BookingTime");
 
             builder.HasKey(x => x.Id);
