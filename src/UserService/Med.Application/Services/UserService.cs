@@ -31,7 +31,7 @@ namespace Med.Application.Services
             var validationResult = input.Validate();
 
             if (!validationResult.IsValid)
-                DomainResult.Error(validationResult);
+                return DomainResult.Error(validationResult);
 
             DomainResult? creationResult = null;
 
@@ -167,7 +167,7 @@ namespace Med.Application.Services
             };
         }
 
-        private DoctorDTO MapDoctorDTO(Doctor entity)
+        private static DoctorDTO MapDoctorDTO(Doctor entity)
         {
             return new DoctorDTO
             {
@@ -178,7 +178,7 @@ namespace Med.Application.Services
             };
         }
 
-        private PatientDTO MapPatientDTO(Patient entity)
+        private static PatientDTO MapPatientDTO(Patient entity)
         {
             return new PatientDTO
             {

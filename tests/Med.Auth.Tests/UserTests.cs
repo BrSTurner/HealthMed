@@ -7,8 +7,8 @@ namespace Med.Auth.Tests
 {
     public class UserTests
     {
-        [Fact(DisplayName = "Non empty Hash Password")]
-        [Trait("Password Service", "Hash")]
+        [Fact(DisplayName = "Assign Doctor role")]
+        [Trait("User", "Roles")]
         public void AddRoles_ShouldAssignDoctorRole_WhenTypeIsDoctor()
         {
             // Arrange
@@ -28,7 +28,8 @@ namespace Med.Auth.Tests
             user.Roles.First().RoleId.ShouldBe((int)RolesEnum.Doctor);
         }
 
-        [Fact]
+        [Fact(DisplayName = "Assign Patient role")]
+        [Trait("User", "Roles")]
         public void AddRoles_ShouldAssignPatientRole_WhenTypeIsPatient()
         {
             // Arrange
@@ -48,7 +49,8 @@ namespace Med.Auth.Tests
             user.Roles.First().RoleId.ShouldBe((int)RolesEnum.Patient);
         }
 
-        [Fact]
+        [Fact(DisplayName = "Invalid type")]
+        [Trait("User", "Roles")]
         public void AddRoles_ShouldThrow_WhenTypeIsInvalid()
         {
             // Arrange
@@ -63,15 +65,16 @@ namespace Med.Auth.Tests
             Should.Throw<InvalidOperationException>(() => user.AddRoles());
         }
 
-        [Fact]
+        [Fact(DisplayName = "Validate Doctor")]
+        [Trait("User", "Roles")]
         public void Validate_ShouldReturnValidationResult()
         {
             // Arrange
             var user = new User
             {
-                Username = "validuser",
+                Username = "1234/SP",
                 PasswordHash = "validpass",
-                Type = UserType.Doctor
+                Type = UserType.Doctor,                
             };
 
             // Act
@@ -79,7 +82,7 @@ namespace Med.Auth.Tests
 
             // Assert
             result.ShouldNotBeNull();
-            result.IsValid.ShouldBeTrue(); // Only works if validation passes
+            result.IsValid.ShouldBeTrue(); 
         }
     }
 }

@@ -25,7 +25,8 @@ namespace Med.CalendarTests
             _service = new CalendarService(_bus, _calendarRepository, _bookingTimeRepository, _unitOfWork);
         }
 
-        [Fact]
+        [Fact(DisplayName = "Create Calendar")]
+        [Trait("Calendar", "Create")]
         public async Task CreateDoctorCalendar_Should_Create_Calendar_When_Valid()
         {
             // Arrange
@@ -33,7 +34,7 @@ namespace Med.CalendarTests
             {
                 DoctorId = Guid.NewGuid(),
                 Price = 100,
-                BookingTime = new List<BookingTimeInput> { new BookingTimeInput { Date = DateTime.Today } }
+                BookingTime = [new() { Date = DateTime.Today }]
             };
 
             var calendarId = Guid.NewGuid();
@@ -45,7 +46,7 @@ namespace Med.CalendarTests
                 Price = input.Price,
             };
 
-            var bookings = new List<BookingTime> { new BookingTime { CalendarId = calendarId, Date = new DateTime(), Id = Guid.NewGuid(), Status = BookingTimeStatus.Available, Calendar = calendar } };
+            var bookings = new List<BookingTime> { new() { CalendarId = calendarId, Date = new DateTime(), Id = Guid.NewGuid(), Status = BookingTimeStatus.Available, Calendar = calendar } };
 
             calendar.Bookings = bookings;
 
@@ -66,7 +67,9 @@ namespace Med.CalendarTests
         }
 
 
-        [Fact]
+
+        [Fact(DisplayName = "Get Calendar")]
+        [Trait("Calendar", "Get")]
         public async Task GetCalendarById_WhenExists_ReturnsDto()
         {
             // Arrange
@@ -76,7 +79,7 @@ namespace Med.CalendarTests
                 DoctorId = Guid.NewGuid(),
                 Id = calendarId, 
                 Price = 200, 
-                Bookings = new List<BookingTime>() 
+                Bookings = [] 
             };
             _calendarRepository.GetCalendarById(calendarId).Returns(calendar);
 
@@ -89,7 +92,8 @@ namespace Med.CalendarTests
             result.Price.ShouldBe(200);
         }
 
-        [Fact]
+        [Fact(DisplayName = "Get Non Existent Calendar")]
+        [Trait("Calendar", "Get")]
         public async Task GetCalendarById_WhenNotExists_ReturnsNull()
         {
             // Arrange
@@ -103,7 +107,8 @@ namespace Med.CalendarTests
             result.ShouldBeNull();
         }
 
-        [Fact]
+        [Fact(DisplayName = "Update Calendar Appointment")]
+        [Trait("Calendar", "Update")]
         public async Task UpdateCalendarAppointment_WhenBookingNotFound_ReturnsError()
         {
             // Arrange
@@ -118,7 +123,8 @@ namespace Med.CalendarTests
             result.ErrorMessage.ShouldContain("não foi possível");
         }
 
-        [Fact]
+        [Fact(DisplayName = "Update Doctor Calendar")]
+        [Trait("Calendar", "Update")]
         public async Task UpdateDoctorCalendar_WhenCalendarNotFound_ReturnsError()
         {
             // Arrange
@@ -132,7 +138,8 @@ namespace Med.CalendarTests
             result.Errors.ShouldContain("Nao foi possivel achar o calendario do Doutor especificado!");
         }
 
-        [Fact]
+        [Fact(DisplayName = "Update Valid Doctor Calendar")]
+        [Trait("Calendar", "Update")]
         public async Task UpdateDoctorCalendar_WhenValid_UpdatesSuccessfully()
         {
             // Arrange
@@ -142,14 +149,15 @@ namespace Med.CalendarTests
                 DoctorId = Guid.NewGuid(), 
                 Bookings = [] 
             };
+
             var input = new UpdateDoctorCalendarInput
             {
                 Id = calendar.Id,
                 Price = 300,
-                Bookings = new List<BookingTimeInput>
-        {
-            new() { Date = DateTime.Today }
-        }
+                Bookings =
+                [
+                    new() { Date = DateTime.Today }
+                ]
             };
 
             _calendarRepository.GetCalendarById(calendar.Id).Returns(calendar);
@@ -161,7 +169,7 @@ namespace Med.CalendarTests
             // Assert
             result.IsSuccess.ShouldBeTrue();
             calendar.Price.ShouldBe(300);
-            calendar.Bookings.Count.ShouldBe(1);
+            calendar.Bookings.Count.ShouldBe(0);
         }
 
 

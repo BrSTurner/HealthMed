@@ -19,8 +19,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\AppointmentService\Med.application\Med.application.csproj" />
-    <ProjectReference Include="..\MessageBus\Med.MessageBus\Med.MessageBus.csproj" />
+    <ProjectReference Include="..\..\src\AppointmentService\Med.application\Med.application.csproj" />
+    <ProjectReference Include="..\..\src\MessageBus\Med.MessageBus\Med.MessageBus.csproj" />
   </ItemGroup>
 
   <ItemGroup>

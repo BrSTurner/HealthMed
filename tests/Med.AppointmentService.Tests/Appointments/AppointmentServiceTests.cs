@@ -28,7 +28,8 @@ namespace Med.AppointmentTests
             _service = new AppointmentService(_bus, _appointmentRepository, _unitOfWork);
         }
 
-        [Fact]
+        [Fact(DisplayName = "Create Appointment")]
+        [Trait("Appointment", "Create")]
         public async Task CreateAppointment_Should_Create_When_Valid()
         {
             // Arrange
@@ -70,7 +71,8 @@ namespace Med.AppointmentTests
         }
 
 
-        [Fact]
+        [Fact(DisplayName = "Cancel Appointment")]
+        [Trait("Appointment", "Cancel")]
         public async Task CancelAppointment_Should_Cancel_When_Valid()
         {
             // Arrange
@@ -110,7 +112,8 @@ namespace Med.AppointmentTests
             appointment.ReasonForCanceling.ShouldBe(input.ReasonForCanceling);
         }
 
-        [Fact]
+        [Fact(DisplayName = "Reply Appointment")]
+        [Trait("Appointment", "Reply")]
         public async Task ReplyAppointment_Should_Reply_When_Valid_And_Approved()
         {
             // Arrange
@@ -143,7 +146,8 @@ namespace Med.AppointmentTests
             appointment.Status.ShouldBe(AppointmentStatus.Confirmed);
         }
 
-        [Fact]
+        [Fact(DisplayName = "Reply Refused Appointment")]
+        [Trait("Appointment", "Reply")]
         public async Task ReplyAppointment_Should_Reply_When_Refused_And_Update_Calendar()
         {
             // Arrange
@@ -183,9 +187,5 @@ namespace Med.AppointmentTests
             result.IsSuccess.ShouldBeTrue();
             appointment.Status.ShouldBe(AppointmentStatus.Refused);
         }
-
-
-
-
     }
 }

@@ -19,9 +19,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\CalendarService\Med.Application\Med.Application.csproj" />
-    <ProjectReference Include="..\CalendarService\Med.Domain\Med.Domain.csproj" />
-    <ProjectReference Include="..\MessageBus\Med.MessageBus\Med.MessageBus.csproj" />
+    <ProjectReference Include="..\..\src\MessageBus\Med.MessageBus\Med.MessageBus.csproj" />
+    <ProjectReference Include="..\..\src\UserService\Med.Application\Med.Application.csproj" />
+    <ProjectReference Include="..\..\src\UserService\Med.Domain\Med.Domain.csproj" />
   </ItemGroup>
 
   <ItemGroup>
