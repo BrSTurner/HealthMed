@@ -19,8 +19,8 @@ namespace Med.Infrastructure.Extensions
 
             if(useInMemory)
                 services.AddDbContext<CalendarContext>(c => c.UseInMemoryDatabase("Calendars"));
-            //else
-            //    services.AddDbContext<CalendarContext>(c => c.UseSqlServer(configuration.GetConnectionString("DefaultConnection")));
+            else
+                services.AddDbContext<CalendarContext>(c => c.UseSqlServer(configuration.GetConnectionString("DefaultConnection")));
         }
     }
 }

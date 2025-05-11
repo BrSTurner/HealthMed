@@ -9,14 +9,15 @@ namespace Med.MessageBus
         private readonly IBusControl _busControl;
         private bool _isConnected;
         private RequestTimeout _timeout;
-
-
         public bool IsConnected => _isConnected;
 
         public MessageBus(IBusControl busControl)
         {
+#if DEBUG 
             _timeout = TimeSpan.FromMinutes(5);
-
+#else
+            _timeout = RequestTimeout.Default;
+#endif
             _busControl = busControl;
             TryConnect();
         }

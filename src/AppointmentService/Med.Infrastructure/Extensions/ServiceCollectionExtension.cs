@@ -17,8 +17,8 @@ namespace Med.Infrastructure.Extensions
 
             if(useInMemory)
                 services.AddDbContext<AppointmentContext>(c => c.UseInMemoryDatabase("Appointments"));
-            //else
-            //    services.AddDbContext<AppointmentContext>(c => c.UseSqlServer(configuration.GetConnectionString("DefaultConnection")));
+            else
+                services.AddDbContext<AppointmentContext>(c => c.UseSqlServer(configuration.GetConnectionString("DefaultConnection")));
         }
     }
 }

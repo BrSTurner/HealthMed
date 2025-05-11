@@ -12,7 +12,7 @@ namespace Med.Domain.Entities
         public Email? Email { get; set; }
         public required string PasswordHash { get; set; }
         public UserType Type { get; set; }
-        public ICollection<UserRole>? Roles { get; set; }
+        public virtual ICollection<UserRole>? Roles { get; set; }
 
         public override ValidationResult Validate()
             => new UserValidation().Validate(this);

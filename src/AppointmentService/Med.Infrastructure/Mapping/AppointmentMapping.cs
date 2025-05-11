@@ -14,10 +14,9 @@ namespace Med.Infrastructure.Mapping
 
             builder.Property(x => x.DoctorId).IsRequired();
             builder.Property(x => x.PatientId).IsRequired();
-            builder.Property(x => x.Status).IsRequired();
-            builder.Property(x => x.Status).IsRequired();
             builder.Property(x => x.Date).IsRequired();
-            builder.Property(x => x.ReasonForCanceling);
+            builder.Property(x => x.Status).IsRequired();
+            builder.Property(x => x.ReasonForCanceling).IsRequired(false);
         }
     }
 }

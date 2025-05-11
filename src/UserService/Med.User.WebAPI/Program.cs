@@ -7,52 +7,23 @@ using Med.Infrastructure.Extensions;
 using Med.MessageBus.Extensions;
 using Med.MessageBus.Integration.Responses.Users;
 using Med.Migrator;
-using Med.SharedKernel.DomainObjects;
-using Med.SharedKernel.Enumerations;
+using Med.SharedAuth;
+using Microsoft.AspNetCore.Http.HttpResults;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddApplication(builder.Configuration);
-builder.Services.AddInfrastructure(builder.Configuration, true);
+builder.Services.AddInfrastructure(builder.Configuration, false);
 builder.Services.AddMessageBus();
+builder.Services.AddAuthorizationServices(builder.Configuration);
 
 var app = builder.Build();
 
 DatabaseMigrator.MigrateDatabase<UserContext>(app);
 
-using (var scope = app.Services.CreateScope())
-{
-    var userService = scope.ServiceProvider.GetRequiredService<IUserService>();
-
-    var user1 = new CreateUserInput
-    {
-        Type = UserType.Doctor,
-        Name = "Gustavo",
-        Password = "1234",
-        Email = "gustavo@mpr.com.br",
-        CPF = "387.183.198-07",
-        CRM = "1234/SP",
-        SpecialityId = Guid.Parse("3fa85f64-5717-4562-b3fc-2c963f66afa6")
-    };
-
-    var user2 = new CreateUserInput
-    {
-        Type = UserType.Patient,
-        Name = "Matheus",
-        Password = "4321",
-        Email = "matheus@mpr.com.br",
-        CPF = "337.880.378-90",
-        CRM = "",
-        SpecialityId = Guid.Parse("3fa85f64-5717-4562-b3fc-2c963f66afa6")
-    };
-
-    await userService.CreateUser(user1);
-    await userService.CreateUser(user2);
-}
-
-    if (app.Environment.IsDevelopment())
+if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
@@ -119,5 +90,8 @@ group.MapGet("GetDoctor", async (string crm, IUserService userService) =>
 .Produces<Doctor>(StatusCodes.Status200OK)
 .Produces(StatusCodes.Status400BadRequest)
 .Produces(StatusCodes.Status404NotFound);
+
+app.UseAuthentication();
+app.UseAuthorization();
 
 app.Run();

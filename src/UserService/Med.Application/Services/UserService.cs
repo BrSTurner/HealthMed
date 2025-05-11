@@ -49,7 +49,7 @@ namespace Med.Application.Services
                 return creationResult;
 
             if(await _unitOfWork.SaveChanges())
-                return DomainResult.Success(creationResult);
+                return DomainResult.Success(creationResult?.Data);
 
             return DomainResult.Error("Nao foi possivel criar o usuario");
         }        
@@ -192,7 +192,7 @@ namespace Med.Application.Services
         private static DomainResult CreateResponse(CreateUserResponse? response) 
         {
             return response != null ? 
-                DomainResult.Create(response.Success, [response.ErrorMessage ?? string.Empty]) :
+                DomainResult.Create(response.Success, [response.ErrorMessage ?? string.Empty], response.Success ? response : null) :
                 DomainResult.Error("Nao foi possivel criar o usuario");
         }
 

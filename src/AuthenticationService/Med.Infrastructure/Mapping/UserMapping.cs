@@ -19,7 +19,6 @@ namespace Med.Infrastructure.Mapping
             builder.HasMany(x => x.Roles)
                 .WithOne(x => x.User)
                 .HasForeignKey(x => x.UserId)
-                .HasPrincipalKey(x => x.Id)
                 .OnDelete(DeleteBehavior.Cascade);
 
             builder.OwnsOne(x => x.Email, emailBuilder =>

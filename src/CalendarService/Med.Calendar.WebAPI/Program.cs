@@ -3,18 +3,50 @@ using Med.Application.Models;
 using Med.Application.Services;
 using Med.Infrastructure.Data;
 using Med.Infrastructure.Extensions;
+using Med.SharedAuth;
+using Microsoft.OpenApi.Models;
+using Microsoft.AspNetCore.Authorization;
+using Med.Infrastructure.Data;
+using Med.Migrator;
 using Med.MessageBus.Extensions;
 using Med.Migrator;
 using Med.SharedKernel.Enumerations;
 
+
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.AddSwaggerGen(c =>
+{
+    c.SwaggerDoc("v1", new OpenApiInfo { Title = "Calendar API", Version = "v1" });
+
+    var jwtSecurityScheme = new OpenApiSecurityScheme
+    {
+        Scheme = "bearer",
+        BearerFormat = "JWT",
+        Name = "Authorization",
+        In = ParameterLocation.Header,
+        Type = SecuritySchemeType.Http,
+        Description = "Enter your JWT token below:",
+        Reference = new OpenApiReference
+        {
+            Id = "Bearer",
+            Type = ReferenceType.SecurityScheme
+        }
+    };
+
+    c.AddSecurityDefinition("Bearer", jwtSecurityScheme);
+
+    c.AddSecurityRequirement(new OpenApiSecurityRequirement
+    {
+        { jwtSecurityScheme, Array.Empty<string>() }
+    });
+});
+
 builder.Services.AddApplication(builder.Configuration);
-builder.Services.AddInfrastructure(builder.Configuration, true);
+builder.Services.AddInfrastructure(builder.Configuration, false);
 builder.Services.AddMessageBus();
-builder.Services.AddSwaggerGen();
+builder.Services.AddAuthorizationServices(builder.Configuration);
 
 var app = builder.Build();
 
@@ -51,7 +83,7 @@ endpointGroup.MapPut(string.Empty, (UpdateDoctorCalendarInput input, ICalendarSe
 .Produces<string>(StatusCodes.Status400BadRequest);
 
 
-endpointGroup.MapGet("by-calendar-id/{calendarId:Guid}", async (Guid calendarId, ICalendarService calendarService) =>
+endpointGroup.MapGet("by-calendar-id/{calendarId:Guid}", [Authorize(Roles = "Doctor,Patient")] async (Guid calendarId, ICalendarService calendarService) =>
 {
     var result = await calendarService.GetCalendarById(calendarId);
 
@@ -82,6 +114,8 @@ endpointGroup.MapGet("by-doctor-id/{doctorId:Guid}", async (Guid doctorId, ICale
 
 
 app.UseHttpsRedirection();
+app.UseAuthentication();
+app.UseAuthorization();
 
 app.Run();
 

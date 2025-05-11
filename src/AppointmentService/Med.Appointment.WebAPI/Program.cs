@@ -4,16 +4,50 @@ using Med.Application.Services;
 using Med.Infrastructure.Extensions;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Med.MessageBus.Extensions;
+using Med.SharedAuth;
+using Microsoft.OpenApi.Models;
+using Med.Infrastructure.Data;
+using Med.Migrator;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.AddSwaggerGen(c =>
+{
+    c.SwaggerDoc("v1", new OpenApiInfo { Title = "Appointment API", Version = "v1" });
+
+    var jwtSecurityScheme = new OpenApiSecurityScheme
+    {
+        Scheme = "bearer",
+        BearerFormat = "JWT",
+        Name = "Authorization",
+        In = ParameterLocation.Header,
+        Type = SecuritySchemeType.Http,
+        Description = "Enter your JWT token below:",
+        Reference = new OpenApiReference
+        {
+            Id = "Bearer",
+            Type = ReferenceType.SecurityScheme
+        }
+    };
+
+    c.AddSecurityDefinition("Bearer", jwtSecurityScheme);
+
+    c.AddSecurityRequirement(new OpenApiSecurityRequirement
+    {
+        { jwtSecurityScheme, Array.Empty<string>() }
+    });
+});
+
+
 builder.Services.AddApplication(builder.Configuration);
-builder.Services.AddInfrastructure(builder.Configuration, true);
+builder.Services.AddInfrastructure(builder.Configuration, false);
 builder.Services.AddMessageBus();
+builder.Services.AddAuthorizationServices(builder.Configuration);
 
 var app = builder.Build();
+
+DatabaseMigrator.MigrateDatabase<AppointmentContext>(app);
 
 if (app.Environment.IsDevelopment())
 {
@@ -69,5 +103,7 @@ endpointGroup.MapGet("by-doctor-id/{doctorId:Guid}", async (Guid doctorId, IAppo
 .Produces(StatusCodes.Status204NoContent);
 
 app.UseHttpsRedirection();
+app.UseAuthentication();
+app.UseAuthorization();
 
 app.Run();

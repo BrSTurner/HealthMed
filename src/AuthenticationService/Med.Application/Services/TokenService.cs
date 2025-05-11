@@ -12,7 +12,7 @@ namespace Med.Application.Services
     {
         private readonly IConfiguration _config = config;
 
-        public string GenerateToken(User user)
+        public string GenerateToken(User user, List<Role> roles)
         {
             var claims = new List<Claim>
             {
@@ -20,7 +20,7 @@ namespace Med.Application.Services
                 new(ClaimTypes.Email, user.Email?.Address ?? string.Empty)
             };
 
-            user.Roles?.ToList().ForEach(userRole => claims.Add(new Claim(ClaimTypes.Role, userRole?.Role?.Name ?? string.Empty)));   
+            roles.ForEach(role => claims.Add(new Claim(ClaimTypes.Role, role.Name ?? string.Empty)));           
 
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["Jwt:Key"] ?? string.Empty));
             var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);

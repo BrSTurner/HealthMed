@@ -10,10 +10,12 @@ namespace Med.Application.Services
         IUserRepository userRepository, 
         IUnitOfWork unitOfWork,
         IPasswordService passwordService,
-        ITokenService tokenService) : IAuthService
+        ITokenService tokenService,
+        IRoleRepository roleRepository) : IAuthService
     {
         private readonly IPasswordService _passwordService = passwordService;
         private readonly IUserRepository _userRepository = userRepository;
+        private readonly IRoleRepository _roleRepository = roleRepository;
         private readonly ITokenService _tokenService = tokenService;
         private readonly IUnitOfWork _unitOfWork = unitOfWork;
         
@@ -40,7 +42,9 @@ namespace Med.Application.Services
             if (_passwordService.IsPasswordValid(password, user.PasswordHash) == false)
                 throw new UnauthorizedAccessException("Senha incorreta");
 
-            return _tokenService.GenerateToken(user);
+            var roles = await _roleRepository.GetRolesById(user.Roles?.Select(x => x.RoleId)?.ToArray() ?? []);
+
+            return _tokenService.GenerateToken(user, roles);
         }
 
         private static void ValidateUser(User user) 
