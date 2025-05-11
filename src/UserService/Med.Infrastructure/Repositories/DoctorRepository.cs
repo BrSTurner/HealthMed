@@ -8,9 +8,15 @@ namespace Med.Infrastructure.Repositories
     public class DoctorRepository(UserContext context) : BaseRepository<Doctor>(context), IDoctorRepository
     {
         public async Task<Doctor?> GetDoctorByCRM(string crm)
-            => await _entity.FirstOrDefaultAsync(p => p.CRM.Number == crm);
+        {
+           return  await _entity
+                .Include(x => x.Speciality)
+                .FirstOrDefaultAsync(p => p.CRM.Number == crm);
+        }
 
-        public async Task<Doctor?> GetDoctorById(Guid id) 
-            => await _entity.FindAsync(id);
+        public async Task<Doctor?> GetDoctorById(Guid id)
+        {
+            return await _entity.Include(x => x.Speciality).FirstOrDefaultAsync(x => x.Id == id);
+        }            
     }
 }

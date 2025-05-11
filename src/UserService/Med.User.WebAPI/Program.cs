@@ -1,3 +1,4 @@
+using MassTransit.Serialization;
 using Med.Application.Extensions;
 using Med.Application.Interfaces.Services;
 using Med.Application.Models.Inputs;
@@ -127,6 +128,24 @@ group.MapGet("GetDoctor", [Authorize(Roles = "Doctor,Patient")] async (string cr
 })
 .WithTags("User")
 .WithName("GetDoctor")
+.Produces<Doctor>(StatusCodes.Status200OK)
+.Produces(StatusCodes.Status400BadRequest)
+.Produces(StatusCodes.Status404NotFound);
+
+group.MapGet("GetDoctorBySpeciality", [Authorize(Roles = "Doctor,Patient")] async (Guid? specialityId , ISpecialityService specialityService) =>
+{
+    if (specialityId == null)
+        return Results.BadRequest();
+
+    var result = await specialityService.GetDoctorsBySpeciality(specialityId.Value);
+
+    if (result == null)
+        return Results.NotFound();
+
+    return Results.Ok(result);
+})
+.WithTags("Speciality")
+.WithName("GetDoctorBySpeciality")
 .Produces<Doctor>(StatusCodes.Status200OK)
 .Produces(StatusCodes.Status400BadRequest)
 .Produces(StatusCodes.Status404NotFound);
