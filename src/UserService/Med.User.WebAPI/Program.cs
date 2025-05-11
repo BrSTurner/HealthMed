@@ -8,6 +8,7 @@ using Med.MessageBus.Extensions;
 using Med.MessageBus.Integration.Responses.Users;
 using Med.Migrator;
 using Med.SharedAuth;
+using Med.SharedKernel.DomainObjects;
 using Microsoft.AspNetCore.Http.HttpResults;
 
 var builder = WebApplication.CreateBuilder(args);
