@@ -117,12 +117,14 @@ namespace Med.Application.Services
                 DomainResult.Error(validationResult);
 
             var appointment = await _appointmentRepository.GetAppointmentByIdAsync(input.AppointmentId);
-            if (appointment != null)
+            if (appointment == null)
             {
-                appointment.Status = input.Status;
+                return DomainResult.Error("Nao foi possivel encontrar o agendamento!");
             }
 
-            if(appointment.Status == AppointmentStatus.Refused)
+            appointment.Status = input.Status;
+
+            if (appointment.Status == AppointmentStatus.Refused)
             {
                 var checkCalendarRequest = new UpdateCalendarAppointmentRequest
                 {
