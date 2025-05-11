@@ -1,4 +1,5 @@
 ﻿using Med.Domain.Entites;
+using Med.SharedKernel.Encryptor;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -20,6 +21,10 @@ namespace Med.Infrastructure.Mapping
             {
                 cpfBuilder.Property(e => e.Number)
                     .HasColumnName("CPF")
+                    .HasConversion(
+                        v => DataEncryptor.Encrypt(v),
+                        v => DataEncryptor.Decrypt(v)
+                    )
                     .IsRequired();
             });
 

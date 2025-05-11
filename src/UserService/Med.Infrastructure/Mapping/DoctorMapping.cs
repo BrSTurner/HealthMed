@@ -1,4 +1,5 @@
 ﻿using Med.Domain.Entites;
+using Med.SharedKernel.Encryptor;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
@@ -28,6 +29,10 @@ namespace Med.Infrastructure.Mapping
             {
                 crmBuilder.Property(e => e.Number)
                     .HasColumnName("CRM")
+                    .HasConversion(
+                        v => DataEncryptor.Encrypt(v),
+                        v => DataEncryptor.Decrypt(v) 
+                    )
                     .IsRequired();
             });
         }
