@@ -113,6 +113,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Med.Appointments.Tests", "t
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Med.Calendars.Tests", "tests\CalendarServiceTests\Med.Calendars.Tests.csproj", "{CFF1B0F2-0633-45DD-AF3C-DB19F801A1CE}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Integration", "Integration", "{73C9B0BB-3DCB-4CF4-B910-F355364A1D0E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Med.Auth.Integration.Tests", "tests\Med.Integration.Tests\Med.Auth.Integration.Tests.csproj", "{0D706DA9-1949-4442-93AE-3EDD67D3D729}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -219,6 +223,10 @@ Global
 		{CFF1B0F2-0633-45DD-AF3C-DB19F801A1CE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CFF1B0F2-0633-45DD-AF3C-DB19F801A1CE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CFF1B0F2-0633-45DD-AF3C-DB19F801A1CE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0D706DA9-1949-4442-93AE-3EDD67D3D729}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0D706DA9-1949-4442-93AE-3EDD67D3D729}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0D706DA9-1949-4442-93AE-3EDD67D3D729}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0D706DA9-1949-4442-93AE-3EDD67D3D729}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -277,6 +285,8 @@ Global
 		{F2A05AAC-F35E-4FF0-BFC1-733980D78CAD} = {B7B9E265-0C10-4245-BDCD-96B345435119}
 		{BCC36D09-CFD9-48D7-8633-E02EA75F0D8B} = {F2A05AAC-F35E-4FF0-BFC1-733980D78CAD}
 		{CFF1B0F2-0633-45DD-AF3C-DB19F801A1CE} = {8E659DA6-3E59-4CCE-A3EE-C9284127376B}
+		{73C9B0BB-3DCB-4CF4-B910-F355364A1D0E} = {B7B9E265-0C10-4245-BDCD-96B345435119}
+		{0D706DA9-1949-4442-93AE-3EDD67D3D729} = {73C9B0BB-3DCB-4CF4-B910-F355364A1D0E}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {B905B996-3719-4576-9718-6A9CA5492322}

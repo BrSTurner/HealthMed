@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.Data.Sqlite;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
@@ -16,10 +17,13 @@ namespace Med.Migrator
             {
                 var services = scope.ServiceProvider;
                 var logger = services.GetRequiredService<ILogger<TContext>>();
-                var context = services.GetRequiredService<TContext>();
+                var context = services.GetRequiredService<TContext>() as DbContext;
 
                 try
                 {
+                    if (context.Database.GetDbConnection().GetType() == typeof(SqliteConnection))
+                        return host;
+
                     logger.LogInformation("Applying database migrations...");
                     context.Database.Migrate();
                     logger.LogInformation("Database migration completed successfully.");

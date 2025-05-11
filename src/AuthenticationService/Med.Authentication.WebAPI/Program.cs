@@ -47,12 +47,21 @@ group.MapPost("Login", async (AuthenticateInput input, IAuthService authService)
 {
     if (input is null)
         return Results.BadRequest();
-
-    var token = await authService.Authenticate(input.UsernameOrEmail, input.Password);
-
-    if(token is null)
-        return Results.Unauthorized();
     
+    var token = string.Empty;
+    
+    try
+    {
+        token = await authService.Authenticate(input.UsernameOrEmail, input.Password);
+
+        if (token is null)
+            return Results.Unauthorized();
+    }
+    catch(Exception ex)
+    {
+        return Results.BadRequest(ex.Message);
+    }
+
     return Results.Ok(token);
 })
 .WithTags("Auth")
@@ -64,3 +73,5 @@ group.MapPost("Login", async (AuthenticateInput input, IAuthService authService)
 app.UseCors("AllowAll");
 
 app.Run();
+
+public partial class AuthProgram { }
