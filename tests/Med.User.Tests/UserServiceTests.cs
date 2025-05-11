@@ -1,4 +1,4 @@
-using FluentValidation.Results;
+Ôªøusing FluentValidation.Results;
 using Med.Application.Models.Inputs;
 using Med.Application.Services;
 using Med.Domain.Entites;
@@ -65,7 +65,7 @@ namespace Med.User.Tests
             var result = await _service.CreateUser(input);
 
             result.IsSuccess.ShouldBeFalse();
-            result.Errors.ShouldContain("CRM j· registrado anteriormente");
+            result.Errors.ShouldContain("CRM j√° registrado anteriormente");
         }
 
         [Fact(DisplayName = "CPF and E-mail Exists")]
@@ -85,7 +85,7 @@ namespace Med.User.Tests
             var result = await _service.CreateUser(input);
 
             result.IsSuccess.ShouldBeFalse();
-            result.Errors.ShouldContain("CPF j· registrado anteriormente");
+            result.Errors.ShouldContain("CPF j√° registrado anteriormente");
 
             // Test email too
             _patientRepo.GetPatientByCPFAsync(input.CPF).Returns((Patient?)null);
@@ -94,7 +94,7 @@ namespace Med.User.Tests
             result = await _service.CreateUser(input);
 
             result.IsSuccess.ShouldBeFalse();
-            result.Errors.ShouldContain("E-mail j· registrado anteriormente");
+            result.Errors.ShouldContain("E-mail j√° registrado anteriormente");
         }
 
         [Fact(DisplayName = "Create Doctor")]
