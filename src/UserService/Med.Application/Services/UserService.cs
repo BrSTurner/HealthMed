@@ -155,7 +155,6 @@ namespace Med.Application.Services
             return MapDoctorDTO(entity);
         }
 
-
         private static CreateUserRequest CreateAuthenticationUserRequest(CreateUserInput input)
         {
             return new CreateUserRequest 
@@ -167,7 +166,7 @@ namespace Med.Application.Services
             };
         }
 
-        private static DoctorDTO MapDoctorDTO(Doctor entity)
+        public static DoctorDTO MapDoctorDTO(Doctor entity)
         {
             return new DoctorDTO
             {

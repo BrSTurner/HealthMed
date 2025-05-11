@@ -11,9 +11,9 @@ namespace Med.Application.Interfaces.Services
 
         Task<DoctorDTO?> GetDoctorByCrm(CRM crm);
 
-        Task<PatientDTO?> GetPatientByCpf(CPF cpf);
-
         Task<DoctorDTO?> GetDoctorById(Guid id);
+
+        Task<PatientDTO?> GetPatientByCpf(CPF cpf);
 
         Task<PatientDTO?> GetPatientById(Guid id);
     }
