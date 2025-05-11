@@ -16,6 +16,9 @@ jobs:
     
     env:
       SOLUTION_NAME: HealthMed.sln
+      DOTNET_CLI_UI_LANGUAGE: en
+      LANG: en_US.UTF-8
+      LC_ALL: en_US.UTF-8
       
     steps:
     - uses: actions/checkout@v4
