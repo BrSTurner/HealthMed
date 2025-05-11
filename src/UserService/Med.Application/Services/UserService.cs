@@ -1,4 +1,5 @@
 ﻿using Med.Application.Interfaces.Services;
+using Med.Application.Mappers;
 using Med.Application.Models.Dtos;
 using Med.Application.Models.Inputs;
 using Med.Domain.Entites;
@@ -119,7 +120,7 @@ namespace Med.Application.Services
                 return null;
             }
 
-            return MapPatientDTO(entity);
+            return UserMapper.MapPatientDTO(entity);
         }
 
         public async Task<PatientDTO?> GetPatientById(Guid id)
@@ -130,7 +131,7 @@ namespace Med.Application.Services
                 return null;
             }
 
-            return MapPatientDTO(entity);
+            return UserMapper.MapPatientDTO(entity);
         }
 
         public async Task<DoctorDTO?> GetDoctorById(Guid id)
@@ -141,7 +142,7 @@ namespace Med.Application.Services
                 return null;
             }
 
-            return MapDoctorDTO(entity);
+            return UserMapper.MapDoctorDTO(entity);
         }
 
         public async Task<DoctorDTO?> GetDoctorByCrm(CRM crm)
@@ -152,7 +153,7 @@ namespace Med.Application.Services
                 return null;
             }
 
-            return MapDoctorDTO(entity);
+            return UserMapper.MapDoctorDTO(entity);
         }
 
         private static CreateUserRequest CreateAuthenticationUserRequest(CreateUserInput input)
@@ -166,27 +167,7 @@ namespace Med.Application.Services
             };
         }
 
-        public static DoctorDTO MapDoctorDTO(Doctor entity)
-        {
-            return new DoctorDTO
-            {
-                Id = entity.Id,
-                CRM = entity.CRM,
-                SpecialityId = entity.SpecialityId,
-                Name = entity.Name,
-            };
-        }
 
-        private static PatientDTO MapPatientDTO(Patient entity)
-        {
-            return new PatientDTO
-            {
-                Id = entity.Id,
-                CPF = entity.CPF,
-                Email = entity.Email,
-                Name = entity.Name,
-            };
-        }
 
         private static DomainResult CreateResponse(CreateUserResponse? response) 
         {
