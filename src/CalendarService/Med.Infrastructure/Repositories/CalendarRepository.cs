@@ -15,9 +15,11 @@ namespace Med.Infrastructure.Repositories
             _entity = _context.Set<Calendar>();
         }
 
-        public async Task<Calendar?> GetCalendarByDoctor(Guid id)
+        public async Task<Calendar?> GetCalendarById(Guid id)
         {
-            return await _entity.FindAsync(id);
+            return await _entity
+                .Include(x => x.Bookings)
+                .FirstAsync(x => x.Id == id);
         }
 
         public async void CreateDoctorCalendar(Calendar calendar)
@@ -28,6 +30,13 @@ namespace Med.Infrastructure.Repositories
         public void CreateBookingTime(List<BookingTime> bookingTimes)
         {
             _context.AddRangeAsync(bookingTimes);
+        }
+
+        public async Task<Calendar?> GetCalendarByDoctorId(Guid doctorId)
+        {
+            return await _entity
+                .Include(x => x.Bookings)
+                .SingleOrDefaultAsync(x => x.DoctorId == doctorId);
         }
     }
 }

@@ -5,7 +5,9 @@ namespace Med.Domain.Repositories
 {
     public interface ICalendarRepository : IRepository<Calendar>
     {
-        Task<Calendar?> GetCalendarByDoctor(Guid doctorId);
+        Task<Calendar?> GetCalendarById(Guid id);
+
+        Task<Calendar?> GetCalendarByDoctorId(Guid doctorId);
 
         void CreateDoctorCalendar(Calendar calendar);
     }

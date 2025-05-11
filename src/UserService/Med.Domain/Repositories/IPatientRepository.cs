@@ -7,6 +7,8 @@ namespace Med.Domain.Repositories
     {
         Task<Patient?> GetPatientByCPFAsync(string cpf);
         Task<Patient?> GetPatientByEmailAsync(string email);
+
+        Task<Patient?> GetPatientByIdAsync(Guid id);
         Task AddAsync(Patient doctor);
     }
 }

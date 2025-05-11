@@ -2,8 +2,7 @@
 {
     public class BookingTimeInput
     {
-        public required Guid CalendarId { get; set; }
+        public Guid? Id { get; set; }
         public DateTime Date { get; set; }
-        public TimeSpan ConsultDuration { get; set; }
     }
 }

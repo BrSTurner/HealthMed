@@ -1,5 +1,6 @@
 ﻿using MassTransit;
 using Polly;
+using System.Threading;
 
 namespace Med.MessageBus
 {
@@ -7,11 +8,15 @@ namespace Med.MessageBus
     {
         private readonly IBusControl _busControl;
         private bool _isConnected;
+        private RequestTimeout _timeout;
+
 
         public bool IsConnected => _isConnected;
 
         public MessageBus(IBusControl busControl)
         {
+            _timeout = TimeSpan.FromMinutes(5);
+
             _busControl = busControl;
             TryConnect();
         }
@@ -27,7 +32,7 @@ namespace Med.MessageBus
             where TResponse : class
         {
             EnsureConnected();
-            var client = _busControl.CreateRequestClient<TRequest>();
+            var client = _busControl.CreateRequestClient<TRequest>(_timeout);
             var response = await client.GetResponse<TResponse>(request);
             return response.Message;
         }

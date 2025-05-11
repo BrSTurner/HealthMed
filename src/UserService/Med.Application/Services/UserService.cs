@@ -1,4 +1,5 @@
 ﻿using Med.Application.Interfaces.Services;
+using Med.Application.Models.Dtos;
 using Med.Application.Models.Inputs;
 using Med.Domain.Entites;
 using Med.Domain.Repositories;
@@ -110,10 +111,50 @@ namespace Med.Application.Services
             return CreateResponse(response);
         }
 
-        public async Task<Doctor?> GetDoctorByCrm(CRM crm)
+        public async Task<PatientDTO?> GetPatientByCpf(CPF cpf)
         {
-            return await _doctorRepository.GetDoctorByCRM(crm.Number);
+            var entity = await _patientRepository.GetPatientByCPFAsync(cpf.Number);
+            if (entity == null)
+            {
+                return null;
+            }
+
+            return MapPatientDTO(entity);
         }
+
+        public async Task<PatientDTO?> GetPatientById(Guid id)
+        {
+            var entity = await _patientRepository.GetPatientByIdAsync(id);
+            if (entity == null)
+            {
+                return null;
+            }
+
+            return MapPatientDTO(entity);
+        }
+
+        public async Task<DoctorDTO?> GetDoctorById(Guid id)
+        {
+            var entity = await _doctorRepository.GetDoctorById(id);
+            if (entity == null)
+            {
+                return null;
+            }
+
+            return MapDoctorDTO(entity);
+        }
+
+        public async Task<DoctorDTO?> GetDoctorByCrm(CRM crm)
+        {
+            var entity = await _doctorRepository.GetDoctorByCRM(crm.Number);
+            if (entity == null)
+            {
+                return null;
+            }
+
+            return MapDoctorDTO(entity);
+        }
+
 
         private static CreateUserRequest CreateAuthenticationUserRequest(CreateUserInput input)
         {
@@ -123,6 +164,28 @@ namespace Med.Application.Services
                 Username = (input.Type == UserType.Patient ? input.CPF : input.CRM) ?? string.Empty,
                 Password = input.Password,
                 Type = input.Type
+            };
+        }
+
+        private DoctorDTO MapDoctorDTO(Doctor entity)
+        {
+            return new DoctorDTO
+            {
+                Id = entity.Id,
+                CRM = entity.CRM,
+                SpecialityId = entity.SpecialityId,
+                Name = entity.Name,
+            };
+        }
+
+        private PatientDTO MapPatientDTO(Patient entity)
+        {
+            return new PatientDTO
+            {
+                Id = entity.Id,
+                CPF = entity.CPF,
+                Email = entity.Email,
+                Name = entity.Name,
             };
         }
 

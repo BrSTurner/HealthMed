@@ -1,9 +1,11 @@
+using Med.Application.Extensions;
 using Med.Application.Models;
 using Med.Application.Services;
-using Med.Application.Extensions;
-using Med.MessageBus.Extensions;
-using Microsoft.AspNetCore.Http.HttpResults;
+using Med.Infrastructure.Data;
 using Med.Infrastructure.Extensions;
+using Med.MessageBus.Extensions;
+using Med.Migrator;
+using Med.SharedKernel.Enumerations;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -12,8 +14,11 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddApplication(builder.Configuration);
 builder.Services.AddInfrastructure(builder.Configuration, true);
 builder.Services.AddMessageBus();
+builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
+
+DatabaseMigrator.MigrateDatabase<CalendarContext>(app);
 
 if (app.Environment.IsDevelopment())
 {
@@ -24,41 +29,57 @@ if (app.Environment.IsDevelopment())
 var endpointGroup = app
     .MapGroup("api/calendar");
 
-endpointGroup.MapPost(string.Empty, (CreateDoctorCalendarInput createDoctorCalendarInput, ICalendarService calendarService) =>
+endpointGroup.MapPost(string.Empty, async (CreateDoctorCalendarInput input, ICalendarService calendarService) =>
 {
-    calendarService.CreateDoctorCalendar(createDoctorCalendarInput);
-    return Results.Created();
+    var dto = await calendarService.CreateDoctorCalendar(input);
+    return Results.Created($"/calendar/{dto.Data}", dto);
 })
 .WithTags("Calendar")
-.WithName("Create Calendar For the Doctor")
-.Produces<Created<Guid>>()
-.Produces<BadRequest>();
+.WithName("CreateDoctorCalendar")
+.Produces<Guid>(StatusCodes.Status201Created)
+.Produces<string>(StatusCodes.Status400BadRequest);
 
-endpointGroup.MapPut(string.Empty, (UpdateDoctorCalendarInput updateDoctorCalendarInput, ICalendarService calendarService) =>
+
+endpointGroup.MapPut(string.Empty, (UpdateDoctorCalendarInput input, ICalendarService calendarService) =>
 {
-    calendarService.UpdateDoctorCalendar(updateDoctorCalendarInput);
+    calendarService.UpdateDoctorCalendar(input);
     return Results.Ok();
 })
 .WithTags("Calendar")
-.WithName("Update Calendar For the Doctor")
-.Produces<Created<Guid>>()
-.Produces<BadRequest>();
+.WithName("UpdateDoctorCalendar")
+.Produces(StatusCodes.Status200OK)
+.Produces<string>(StatusCodes.Status400BadRequest);
 
 
-endpointGroup.MapGet("/{doctorId:Guid}", async (Guid doctorId, ICalendarService calendarService) =>
+endpointGroup.MapGet("by-calendar-id/{calendarId:Guid}", async (Guid calendarId, ICalendarService calendarService) =>
 {
-    var result = await calendarService.GetAvailableCalendarsByDoctor(doctorId);
+    var result = await calendarService.GetCalendarById(calendarId);
 
     if (result == null)
         return Results.NoContent();
 
     return Results.Ok(result);
-
 })
-.WithTags("Calendars")
-.WithName("Get Available Calendars By DoctorId")
-.Produces<Ok>()
-.Produces<NoContent>();
+.WithTags("Calendar")
+.WithName("GetCalendarById")
+.Produces<CalendarDTO>(StatusCodes.Status200OK)
+.Produces(StatusCodes.Status204NoContent);
+
+
+endpointGroup.MapGet("by-doctor-id/{doctorId:Guid}", async (Guid doctorId, ICalendarService calendarService) =>
+{
+    var result = await calendarService.GetCalendarByDoctorId(doctorId);
+
+    if (result == null)
+        return Results.NoContent();
+
+    return Results.Ok(result);
+})
+.WithTags("Calendar")
+.WithName("GetCalendarByDoctorId")
+.Produces<CalendarDTO>(StatusCodes.Status200OK)
+.Produces(StatusCodes.Status204NoContent);
+
 
 app.UseHttpsRedirection();
 

@@ -16,6 +16,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\Migrator\Med.Migrator\Med.Migrator.csproj" />
     <ProjectReference Include="..\Med.Application\Med.Application.csproj" />
     <ProjectReference Include="..\Med.Infrastructure\Med.Infrastructure.csproj" />
   </ItemGroup>

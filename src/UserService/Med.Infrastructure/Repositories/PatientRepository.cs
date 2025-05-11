@@ -13,5 +13,7 @@ namespace Med.Infrastructure.Repositories
         public async Task<Patient?> GetPatientByEmailAsync(string email)
             => await _entity.FirstOrDefaultAsync(p => p.Email.Address.ToLower() == email.ToLower());
 
+        public async Task<Patient?> GetPatientByIdAsync(Guid id) 
+            => await _entity.FindAsync(id);
     }
 }

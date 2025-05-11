@@ -1,12 +1,14 @@
 using Med.Application.Extensions;
 using Med.Application.Interfaces.Services;
 using Med.Application.Models.Inputs;
+using Med.Domain.Entites;
 using Med.Infrastructure.Data;
 using Med.Infrastructure.Extensions;
 using Med.MessageBus.Extensions;
 using Med.MessageBus.Integration.Responses.Users;
 using Med.Migrator;
-using Microsoft.AspNetCore.Http.HttpResults;
+using Med.SharedKernel.DomainObjects;
+using Med.SharedKernel.Enumerations;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -20,7 +22,37 @@ var app = builder.Build();
 
 DatabaseMigrator.MigrateDatabase<UserContext>(app);
 
-if (app.Environment.IsDevelopment())
+using (var scope = app.Services.CreateScope())
+{
+    var userService = scope.ServiceProvider.GetRequiredService<IUserService>();
+
+    var user1 = new CreateUserInput
+    {
+        Type = UserType.Doctor,
+        Name = "Gustavo",
+        Password = "1234",
+        Email = "gustavo@mpr.com.br",
+        CPF = "387.183.198-07",
+        CRM = "1234/SP",
+        SpecialityId = Guid.Parse("3fa85f64-5717-4562-b3fc-2c963f66afa6")
+    };
+
+    var user2 = new CreateUserInput
+    {
+        Type = UserType.Patient,
+        Name = "Matheus",
+        Password = "4321",
+        Email = "matheus@mpr.com.br",
+        CPF = "337.880.378-90",
+        CRM = "",
+        SpecialityId = Guid.Parse("3fa85f64-5717-4562-b3fc-2c963f66afa6")
+    };
+
+    await userService.CreateUser(user1);
+    await userService.CreateUser(user2);
+}
+
+    if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
@@ -44,8 +76,48 @@ group.MapPost("Create", async (CreateUserInput input, IUserService userService) 
     return Results.Created($"user/{(result?.Data as CreateUserResponse)?.UserId}", result?.Data);
 })
 .WithTags("User")
-.WithName("Login")
-.Produces<Created>()
-.Produces<BadRequest>();
+.WithName("CreateUser") 
+.Produces<CreateUserResponse>(StatusCodes.Status201Created) 
+.Produces<IEnumerable<string>>(StatusCodes.Status400BadRequest); 
+
+group.MapGet("GetPatient", async (string cpf, IUserService userService) =>
+{
+    if (string.IsNullOrWhiteSpace(cpf))
+        return Results.BadRequest();
+
+    var cpfDto = new CPF(cpf);
+
+    var result = await userService.GetPatientByCpf(cpfDto);
+
+    if (result == null)
+        return Results.NotFound();
+
+    return Results.Ok(result);
+})
+.WithTags("User")
+.WithName("GetPatient")
+.Produces<Doctor>(StatusCodes.Status200OK)
+.Produces(StatusCodes.Status400BadRequest)
+.Produces(StatusCodes.Status404NotFound);
+
+group.MapGet("GetDoctor", async (string crm, IUserService userService) =>
+{
+    if (string.IsNullOrWhiteSpace(crm))
+        return Results.BadRequest();
+
+    var crmDto = new CRM(crm);
+
+    var result = await userService.GetDoctorByCrm(crmDto);
+
+    if (result == null)
+        return Results.NotFound();
+
+    return Results.Ok(result);
+})
+.WithTags("User")
+.WithName("GetDoctor")
+.Produces<Doctor>(StatusCodes.Status200OK)
+.Produces(StatusCodes.Status400BadRequest)
+.Produces(StatusCodes.Status404NotFound);
 
 app.Run();

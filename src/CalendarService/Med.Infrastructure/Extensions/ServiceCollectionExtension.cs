@@ -14,6 +14,7 @@ namespace Med.Infrastructure.Extensions
         public static void AddInfrastructure(this IServiceCollection services, IConfiguration configuration, bool useInMemory = false)
         {
             services.AddScoped<ICalendarRepository, CalendarRepository>();
+            services.AddScoped<IBookingTimeRepository, BookingTimeRepository>();
             services.AddScoped<IUnitOfWork, UnitOfWork>();
 
             if(useInMemory)
