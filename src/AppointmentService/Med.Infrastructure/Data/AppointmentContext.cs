@@ -25,7 +25,7 @@ namespace Med.Infrastructure.Data
         {
             if (!optionsBuilder.IsConfigured)
             {
-                optionsBuilder.UseInMemoryDatabase("appointments");
+                optionsBuilder.UseInMemoryDatabase("Appointments");
             }
         }
     }

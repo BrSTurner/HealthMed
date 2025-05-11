@@ -5,12 +5,12 @@ namespace Med.Application.Services
 {
     public interface IAppointmentService
     {
-        //public Task<List<AppointmentDTO>> GetAppointmentsByDoctor(Guid doctorId);
+        public Task<List<AppointmentDTO>> GetAppointmentsByDoctor(Guid doctorId);
 
         public Task<DomainResult> CreateAppointment(CreateAppointmentInput createAppointmentInput);
 
-        public void CancelAppointment(CancelAppointmentInput createAppointmentInput);
+        Task<DomainResult> CancelAppointment(CancelAppointmentInput createAppointmentInput);
 
-        public void ReplyAppointment(ReplyAppointmentInput replyAppointmentInput);
+        Task<DomainResult> ReplyAppointment(ReplyAppointmentInput replyAppointmentInput);
     }
 }

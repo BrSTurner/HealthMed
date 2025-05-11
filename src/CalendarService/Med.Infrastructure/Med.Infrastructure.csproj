@@ -15,6 +15,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Med.Application\Med.Application.csproj" />
     <ProjectReference Include="..\Med.Domain\Med.Domain.csproj" />
   </ItemGroup>
 

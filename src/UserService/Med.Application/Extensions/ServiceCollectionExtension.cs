@@ -1,4 +1,5 @@
 ﻿using MassTransit;
+using Med.application.Consumers;
 using Med.Application.Interfaces.Services;
 using Med.Application.Services;
 using Microsoft.Extensions.Configuration;
@@ -15,6 +16,8 @@ namespace Med.Application.Extensions
 
             services.AddMassTransit(x =>
             {
+                x.AddConsumer<GetDoctorAppointmentConsumer>();
+
                 x.UsingRabbitMq((context, cfg) =>
                 {
                     cfg.Host(configuration["RABBITMQ_HOST"], config =>

@@ -4,7 +4,7 @@ using Med.MessageBus.Integration.Requests.Appointments;
 
 namespace Med.application.Consumers
 {
-    public class UserConsumer(IUserService userService) : IConsumer<GetDoctorByAppointmentRequest>
+    public class GetDoctorAppointmentConsumer(IUserService userService) : IConsumer<GetDoctorByAppointmentRequest>
     {
         private readonly IUserService _userService = userService;
 
@@ -14,11 +14,11 @@ namespace Med.application.Consumers
 
             try
             {
-                var doctor = await _userService.GetDoctorByCrm(context.Message.Crm);
+                var doctor = await _userService.GetDoctorById(context.Message.DoctorId);
                 if (doctor != null)
                 {
                     response.Success = true;
-                    response.DoctorId = doctor.UserId;
+                    response.DoctorId = doctor.Id;
                 }
                 else
                 {

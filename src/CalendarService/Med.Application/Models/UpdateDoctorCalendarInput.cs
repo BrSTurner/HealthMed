@@ -4,8 +4,8 @@ namespace Med.Application.Models
 {
     public class UpdateDoctorCalendarInput
     {
-        public Guid DoctorId { get; set; }
+        public Guid Id { get; set; }
         public decimal? Price { get; set; }
-        public List<BookingTime> Bookings { get; set; } = [];
+        public List<BookingTimeInput> Bookings { get; set; } = [];
     }
 }

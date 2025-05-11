@@ -6,7 +6,6 @@ using Med.MessageBus;
 using Med.MessageBus.Integration.Requests.Appointments;
 using Med.MessageBus.Integration.Requests.Calendars;
 using Med.MessageBus.Integration.Responses.Calendars;
-using Med.SharedKernel.DomainObjects;
 using Med.SharedKernel.Models;
 using Med.SharedKernel.UoW;
 
@@ -20,8 +19,25 @@ namespace Med.Application.Services
         private readonly IAppointmentRepository _appointmentRepository = appointmentRepository;
         private readonly IUnitOfWork _unitOfWork = unitOfWork;
 
-        public async void CancelAppointment(CancelAppointmentInput input)
+        public async Task<DomainResult> CancelAppointment(CancelAppointmentInput input)
         {
+            var validationResult = input.Validate();
+
+            if (!validationResult.IsValid)
+                DomainResult.Error(validationResult);
+
+            var checkCalendarRequest = new UpdateCalendarAppointmentRequest
+            {
+                BookingTimeId = input.BookingTimeId,
+                IsCancelled = true
+            };
+
+            var calendarResponse = await UpdateCalendarIfAvailable(checkCalendarRequest);
+            if (!calendarResponse.Success)
+            {
+                return DomainResult.Error(calendarResponse.ErrorMessage);
+            }
+
             var appointment = await _appointmentRepository.GetAppointmentByIdAsync(input.AppointmentId);
             if (appointment != null)
             {
@@ -29,16 +45,25 @@ namespace Med.Application.Services
                 appointment.ReasonForCanceling = input.ReasonForCanceling;
             }
 
-            await _unitOfWork.SaveChanges();
+            if (await _unitOfWork.SaveChanges())
+                return DomainResult.Success();
+
+
+            return DomainResult.Error("Nao foi possivel cancelar a consulta");
         }
 
         public async Task<DomainResult> CreateAppointment(CreateAppointmentInput input)
         {
             ArgumentNullException.ThrowIfNull(input);
 
+            var validationResult = input.Validate();
+
+            if (!validationResult.IsValid)
+                DomainResult.Error(validationResult);
+
             var getDoctorRequest = new GetDoctorByAppointmentRequest
             {
-                Crm = new CRM(input.Crm)
+                DoctorId = input.DoctorId
             };
 
             var doctorResponse = await GetDoctorByAppointment(getDoctorRequest);
@@ -47,9 +72,9 @@ namespace Med.Application.Services
                 return DomainResult.Error(doctorResponse.ErrorMessage);
             }
 
-            var checkCalendarRequest = new UpdateCalendarIfAvailableRequest
+            var checkCalendarRequest = new UpdateCalendarAppointmentRequest
             {
-                Date = input.Date,
+                BookingTimeId = input.BookingTimeId
             };
 
             var calendarResponse = await UpdateCalendarIfAvailable(checkCalendarRequest);
@@ -68,28 +93,73 @@ namespace Med.Application.Services
 
             _appointmentRepository.AddAppointmentAsync(appointment);
 
+            var dto = MapAppointmentDTO(appointment);
+
             if (await _unitOfWork.SaveChanges())
-                return DomainResult.Success();
+                return DomainResult.Success(dto);
 
 
             return DomainResult.Error("Nao foi possivel criar a consulta");
         }
 
-        public async void ReplyAppointment(ReplyAppointmentInput replyAppointmentInput)
+        public async Task<List<AppointmentDTO>> GetAppointmentsByDoctor(Guid doctorId)
         {
-            var appointment = await _appointmentRepository.GetAppointmentByIdAsync(replyAppointmentInput.AppointmentId);
+            var appointments = await _appointmentRepository.GetAppointmentsByDoctor(doctorId);
+
+            return appointments.Select(x => MapAppointmentDTO(x)).ToList();
+        }
+
+        public async Task<DomainResult> ReplyAppointment(ReplyAppointmentInput input)
+        {
+            var validationResult = input.Validate();
+
+            if (!validationResult.IsValid)
+                DomainResult.Error(validationResult);
+
+            var appointment = await _appointmentRepository.GetAppointmentByIdAsync(input.AppointmentId);
             if (appointment != null)
             {
-                appointment.Status = replyAppointmentInput.Status;
+                appointment.Status = input.Status;
             }
 
-            await _unitOfWork.SaveChanges();
+            if(appointment.Status == AppointmentStatus.Refused)
+            {
+                var checkCalendarRequest = new UpdateCalendarAppointmentRequest
+                {
+                    BookingTimeId = input.BookingTimeId,
+                    IsCancelled = true
+                };
+
+                var calendarResponse = await UpdateCalendarIfAvailable(checkCalendarRequest);
+                if (!calendarResponse.Success)
+                {
+                    return DomainResult.Error(calendarResponse.ErrorMessage);
+                }
+            }
+
+            if (await _unitOfWork.SaveChanges())
+                return DomainResult.Success();
+
+
+            return DomainResult.Error("Nao foi possivel responder a consulta");
+        }
+
+        private AppointmentDTO MapAppointmentDTO(Appointment entity)
+        {
+            return new AppointmentDTO
+            {
+                Id = entity.Id,
+                Date = entity.Date,
+                PatientId = entity.PatientId,
+                DoctorId = entity.DoctorId,
+                Status = entity.Status,
+            };
         }
 
         private async Task<GetDoctorByAppointmentResponse> GetDoctorByAppointment(GetDoctorByAppointmentRequest request)
             => await _bus.RequestAsync<GetDoctorByAppointmentRequest, GetDoctorByAppointmentResponse>(request);
 
-        private async Task<UpdateCalendarIfAvailableResponse> UpdateCalendarIfAvailable(UpdateCalendarIfAvailableRequest request)
-            => await _bus.RequestAsync<UpdateCalendarIfAvailableRequest, UpdateCalendarIfAvailableResponse>(request);
+        private async Task<UpdateCalendarAppointmentResponse> UpdateCalendarIfAvailable(UpdateCalendarAppointmentRequest request)
+            => await _bus.RequestAsync<UpdateCalendarAppointmentRequest, UpdateCalendarAppointmentResponse>(request);
     }
 }

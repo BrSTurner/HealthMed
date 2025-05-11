@@ -5,17 +5,17 @@ using Med.MessageBus.Integration.Responses.Calendars;
 
 namespace Med.Application.Consumers
 {
-    public class UpdateCalendarIfAvailableConsumer(ICalendarService calendarService) : IConsumer<UpdateCalendarIfAvailableRequest>
+    public class UpdateCalendarIfAvailableConsumer(ICalendarService calendarService) : IConsumer<UpdateCalendarAppointmentRequest>
     {
         private readonly ICalendarService _calendarService = calendarService;
 
-        public async Task Consume(ConsumeContext<UpdateCalendarIfAvailableRequest> context)
+        public async Task Consume(ConsumeContext<UpdateCalendarAppointmentRequest> context)
         {
-            var response = new UpdateCalendarIfAvailableResponse();
+            var response = new UpdateCalendarAppointmentResponse();
 
             try
             {
-                response = await _calendarService.UpdateCalendarIfAvailable(context.Message);
+                response = await _calendarService.UpdateCalendarAppointment(context.Message);
             }
             catch (Exception e)
             {

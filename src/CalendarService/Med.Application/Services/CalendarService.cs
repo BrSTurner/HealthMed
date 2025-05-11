@@ -7,15 +7,18 @@ using Med.MessageBus.Integration.Requests.Calendars;
 using Med.MessageBus.Integration.Responses.Calendars;
 using Med.SharedKernel.Models;
 using Med.SharedKernel.UoW;
+using System.Linq;
 
 namespace Med.Application.Services
 {
     public class CalendarService(IMessageBus bus,
         ICalendarRepository calendarRepository,
+        IBookingTimeRepository bookingTimeRepository,
         IUnitOfWork unitOfWork) : ICalendarService
     {
         private readonly IMessageBus _bus = bus;
         private readonly ICalendarRepository _calendarRepository = calendarRepository;
+        private readonly IBookingTimeRepository _bookingTimeRepository = bookingTimeRepository;
         private readonly IUnitOfWork _unitOfWork = unitOfWork;
 
         public async Task<DomainResult> CreateDoctorCalendar(CreateDoctorCalendarInput input)
@@ -24,79 +27,96 @@ namespace Med.Application.Services
             {
                 DoctorId = input.DoctorId,
                 Price = input.Price,
+                Bookings = new List<BookingTime>()
             };
 
-            var bookingEntities = input.BookingTime.Select(x => MapBookingTime(x, calendarEntity));  
+            var alreadyExistedCalendar = await _calendarRepository.GetCalendarByDoctorId(calendarEntity.DoctorId);
+            if(alreadyExistedCalendar != null)
+            {
+                return DomainResult.Error("Já tem um calendario para este médico!");
+            }
 
             _calendarRepository.CreateDoctorCalendar(calendarEntity);
+            if (!await _unitOfWork.SaveChanges())
+                return DomainResult.Error("Não foi possível criar o calendário!");
+
+            var bookingEntities = input.BookingTime.Select(x => MapBookingTime(x, calendarEntity)).ToList();
+            _bookingTimeRepository.CreateCalendarBookingTime(bookingEntities);
+
+            var dto = MapCalendarDto(calendarEntity);
 
             if (await _unitOfWork.SaveChanges())
-                return DomainResult.Success();
+                return DomainResult.Success(dto);
 
             return DomainResult.Error("Nao foi possivel criar a calendario!");
         }
 
-        public async Task<CalendarDTO?> GetAvailableCalendarsByDoctor(Guid doctorId)
+        public async Task<CalendarDTO?> GetCalendarById(Guid calendarId)
         {
-            var entity = await _calendarRepository.GetCalendarByDoctor(doctorId);
-
+            var entity = await _calendarRepository.GetCalendarById(calendarId);
             if (entity == null)
+            {
                 return null;
-
-            var dto = new CalendarDTO
-            {
-                Bookings = entity.Bookings ?? [],
-                Price = entity.Price
-            };
-
-            return dto;
-    
-        }
-
-        public async Task<UpdateCalendarIfAvailableResponse> UpdateCalendarIfAvailable(UpdateCalendarIfAvailableRequest request)
-        {
-            var doctorCalendar = await _calendarRepository.GetCalendarByDoctor(request.DoctorId);
-
-            if (doctorCalendar == null)
-            {
-                return new UpdateCalendarIfAvailableResponse
-                {
-                    Success = false,
-                    ErrorMessage = "Não foi possível encontrar o Doutor"
-                };
             }
 
-            var booking = doctorCalendar?.Bookings.SingleOrDefault(x => x.Date == request.Date);
+            var dto = MapCalendarDto(entity);
 
+            return dto;
+        }
+
+        public async Task<CalendarDTO?> GetCalendarByDoctorId(Guid doctorId)
+        {
+            var entity = await _calendarRepository.GetCalendarByDoctorId(doctorId);
+            if (entity == null)
+            {
+                return null;
+            }
+
+            var dto =  MapCalendarDto(entity);
+
+            return dto;
+        }
+
+        public async Task<UpdateCalendarAppointmentResponse> UpdateCalendarAppointment(UpdateCalendarAppointmentRequest request)
+        {
+            var booking = await _bookingTimeRepository.GetBookingTimeById(request.BookingTimeId);
             if (booking == null)
             {
-                return new UpdateCalendarIfAvailableResponse
+                return new UpdateCalendarAppointmentResponse
                 {
                     Success = false,
                     ErrorMessage = "Horário selecionado não foi possível de ser achado"
                 };
             }
 
-            if (booking.Status == BookingTimeStatus.Unavailable)
+            if (request.IsCancelled.HasValue && request.IsCancelled.Value)
             {
-                return new UpdateCalendarIfAvailableResponse
+                booking.Status = BookingTimeStatus.Available;
+            }
+            else
+            {
+                if (booking.Status == BookingTimeStatus.Unavailable)
                 {
-                    Success = false,
-                    ErrorMessage = "Horário selecionado não está disponível"
-                };
+                    return new UpdateCalendarAppointmentResponse
+                    {
+                        Success = false,
+                        ErrorMessage = "Horário selecionado não está disponível"
+                    };
+                }
+
+                booking.Status = BookingTimeStatus.Unavailable;
             }
 
-            booking.Status = BookingTimeStatus.Unavailable;
 
             if (await _unitOfWork.SaveChanges())
-                return new UpdateCalendarIfAvailableResponse { Success = true };
+                return new UpdateCalendarAppointmentResponse { Success = true };
 
-            return new UpdateCalendarIfAvailableResponse { Success = false };
+            return new UpdateCalendarAppointmentResponse { Success = false };
         }
 
         public async Task<DomainResult> UpdateDoctorCalendar(UpdateDoctorCalendarInput input)
         {
-            var calendar = await _calendarRepository.GetCalendarByDoctor(input.DoctorId);
+            var calendar = await _calendarRepository.GetCalendarById(input.Id);
             if (calendar == null)
             {
                 return DomainResult.Error("Nao foi possivel achar o calendario do Doutor especificado!");
@@ -107,10 +127,12 @@ namespace Med.Application.Services
                 calendar.Price = input.Price.Value;
             }
 
-            if(input.Bookings.Count > 0)
+            var newBookingsTime = input.Bookings.Where(x => !x.Id.HasValue).Select(x => MapBookingTime(x, calendar)).ToList();  
+            if(newBookingsTime.Count() > 0)
             {
-                calendar.Bookings = input.Bookings;
+                _bookingTimeRepository.CreateCalendarBookingTime(newBookingsTime);
             }
+ 
 
             if (await _unitOfWork.SaveChanges())
                 return DomainResult.Success();
@@ -122,12 +144,32 @@ namespace Med.Application.Services
         {
             return new BookingTime
             {
-                CalendarId = input.CalendarId,
-                ConsultDuration = input.ConsultDuration,
+                CalendarId = entity.Id,
                 CreatedAt = DateTime.Now,
                 Status = BookingTimeStatus.Available,
                 Date = input.Date,
                 Calendar = entity
+            };
+        }
+
+        private BookingTimeDto MapBookingTimeDto(BookingTime entity)
+        {
+            return new BookingTimeDto
+            {
+                Id = entity.Id,
+                Date = entity.Date,
+                Status = entity.Status,
+                ConsultDuration = entity.ConsultDuration,   
+            };
+        }
+
+        private CalendarDTO MapCalendarDto(Calendar entity)
+        {
+            return new CalendarDTO
+            {
+                Id = entity.Id,
+                Bookings = entity.Bookings.Select(x => MapBookingTimeDto(x)).ToList() ?? new List<BookingTimeDto>(),
+                Price = entity.Price,
             };
         }
     }

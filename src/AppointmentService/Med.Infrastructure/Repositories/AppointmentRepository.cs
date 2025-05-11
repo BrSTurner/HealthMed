@@ -4,10 +4,15 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Med.Domain.Repositories
 {
-    public class AppointmentRepository(AppointmentContext context) : IAppointmentRepository
+    public class AppointmentRepository : IAppointmentRepository
     {
         protected readonly AppointmentContext _context;
         protected readonly DbSet<Appointment> _entity;
+        public AppointmentRepository(AppointmentContext context)
+        {
+            _context = context;
+            _entity = _context.Set<Appointment>();
+        }
 
         public async Task<List<Appointment>> GetAppointmentsByDoctor(Guid doctorId)
         {

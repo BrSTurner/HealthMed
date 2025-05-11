@@ -103,6 +103,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Auth", "Auth", "{51B896E0-7
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Med.Auth.Tests", "tests\Med.Auth.Tests\Med.Auth.Tests.csproj", "{1E06DE12-B890-4A3E-A55E-EE2FEA5356C7}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Med.CalendarService.Tests", "src\CalendarServiceTests\Med.CalendarService.Tests.csproj", "{F7D95CD4-E4EC-4EE3-B099-CA883AE231C0}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Med.AppointmentService.Tests", "src\Med.AppointmentService.Tests\Med.AppointmentService.Tests.csproj", "{F1B71A67-26C1-4745-8F8A-CE018461DFB4}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -197,6 +201,14 @@ Global
 		{1E06DE12-B890-4A3E-A55E-EE2FEA5356C7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1E06DE12-B890-4A3E-A55E-EE2FEA5356C7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1E06DE12-B890-4A3E-A55E-EE2FEA5356C7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F7D95CD4-E4EC-4EE3-B099-CA883AE231C0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F7D95CD4-E4EC-4EE3-B099-CA883AE231C0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F7D95CD4-E4EC-4EE3-B099-CA883AE231C0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F7D95CD4-E4EC-4EE3-B099-CA883AE231C0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F1B71A67-26C1-4745-8F8A-CE018461DFB4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F1B71A67-26C1-4745-8F8A-CE018461DFB4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F1B71A67-26C1-4745-8F8A-CE018461DFB4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F1B71A67-26C1-4745-8F8A-CE018461DFB4}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -250,6 +262,8 @@ Global
 		{3CA15131-C3C8-4AB9-B58A-9A931E2DDE04} = {B7B9E265-0C10-4245-BDCD-96B345435119}
 		{51B896E0-7D2D-4E94-984F-FEEC966599C1} = {B7B9E265-0C10-4245-BDCD-96B345435119}
 		{1E06DE12-B890-4A3E-A55E-EE2FEA5356C7} = {51B896E0-7D2D-4E94-984F-FEEC966599C1}
+		{F7D95CD4-E4EC-4EE3-B099-CA883AE231C0} = {B7B9E265-0C10-4245-BDCD-96B345435119}
+		{F1B71A67-26C1-4745-8F8A-CE018461DFB4} = {B7B9E265-0C10-4245-BDCD-96B345435119}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {B905B996-3719-4576-9718-6A9CA5492322}

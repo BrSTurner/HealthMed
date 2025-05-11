@@ -70,17 +70,17 @@ endpointGroup.MapPatch("reply/", (ReplyAppointmentInput replyAppointment, IAppoi
     return Results.Ok();
 })
 .WithTags("Appointments")
-.WithName("Create Appoint")
+.WithName("Reply Appointment")
 .Produces<Ok>()
 .Produces<BadRequest>();
 
-endpointGroup.MapPost(string.Empty, (CreateAppointmentInput createAppointment, IAppointmentService appointmentService) =>
+endpointGroup.MapPost(string.Empty, async (CreateAppointmentInput createAppointment, IAppointmentService appointmentService) =>
 {
-    appointmentService.CreateAppointment(createAppointment);
-    return Results.Created();
+    var dto = await appointmentService.CreateAppointment(createAppointment);
+    return Results.Created($"/appointment/{dto.Data}", dto);
 })
 .WithTags("Appointments")
-.WithName("Reply Appoint")
+.WithName("Create Appointment")
 .Produces<Created<Guid>>()
 .Produces<BadRequest>();
 
@@ -93,6 +93,20 @@ endpointGroup.MapPatch("cancel/", (CancelAppointmentInput cancelAppointment, IAp
 .WithName("Cancel Appoint")
 .Produces<Ok>()
 .Produces<BadRequest>();
+
+endpointGroup.MapGet("by-doctor-id/{doctorId:Guid}", async (Guid doctorId, IAppointmentService appointmentService) =>
+{
+    var result = await appointmentService.GetAppointmentsByDoctor(doctorId);
+
+    if (result == null)
+        return Results.NoContent();
+
+    return Results.Ok(result);
+})
+.WithTags("Appointments")
+.WithName("GetCalendarByDoctorId")
+.Produces<AppointmentDTO>(StatusCodes.Status200OK)
+.Produces(StatusCodes.Status204NoContent);
 
 app.UseHttpsRedirection();
 app.UseAuthentication();

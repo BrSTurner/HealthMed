@@ -1,5 +1,6 @@
 ﻿using MassTransit;
 using Polly;
+using System.Threading;
 
 namespace Med.MessageBus
 {

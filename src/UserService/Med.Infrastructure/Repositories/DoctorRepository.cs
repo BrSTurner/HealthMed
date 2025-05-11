@@ -1,7 +1,6 @@
 ﻿using Med.Domain.Entites;
 using Med.Domain.Repositories;
 using Med.Infrastructure.Data;
-using Med.SharedKernel.DomainObjects;
 using Microsoft.EntityFrameworkCore;
 
 namespace Med.Infrastructure.Repositories
@@ -12,6 +11,6 @@ namespace Med.Infrastructure.Repositories
             => await _entity.FirstOrDefaultAsync(p => p.CRM.Number == crm);
 
         public async Task<Doctor?> GetDoctorById(Guid id) 
-            => await _entity.FirstOrDefaultAsync(p => p.UserId == id);
+            => await _entity.FindAsync(id);
     }
 }

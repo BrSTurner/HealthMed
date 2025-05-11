@@ -13,7 +13,7 @@ builder.Configuration.AddEnvironmentVariables();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddApplication(builder.Configuration);
-builder.Services.AddInfrastructure(builder.Configuration, false);
+builder.Services.AddInfrastructure(builder.Configuration, true);
 builder.Services.AddMessageBus();
 
 builder.WebHost.ConfigureKestrel(options =>
