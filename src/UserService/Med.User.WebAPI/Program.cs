@@ -49,9 +49,16 @@ builder.Services.AddAuthorizationServices(builder.Configuration);
 
 builder.WebHost.ConfigureKestrel(options =>
 {
-    options.ListenAnyIP(8081, listenOptions =>
+    options.ListenAnyIP(8081);
+});
+
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAll", policy =>
     {
-        listenOptions.UseHttps();       
+        policy.AllowAnyOrigin()
+              .AllowAnyMethod()
+              .AllowAnyHeader();
     });
 });
 
@@ -64,9 +71,6 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
-
-app.UseHttpsRedirection();
-
 
 var group = app.MapGroup("/api/user");
 
@@ -127,6 +131,7 @@ group.MapGet("GetDoctor", [Authorize(Roles = "Doctor,Patient")] async (string cr
 .Produces(StatusCodes.Status400BadRequest)
 .Produces(StatusCodes.Status404NotFound);
 
+app.UseCors("AllowAll");
 app.UseAuthentication();
 app.UseAuthorization();
 

@@ -49,9 +49,16 @@ builder.Services.AddAuthorizationServices(builder.Configuration);
 
 builder.WebHost.ConfigureKestrel(options =>
 {
-    options.ListenAnyIP(8083, listenOptions =>
+    options.ListenAnyIP(8083);
+});
+
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAll", policy =>
     {
-        listenOptions.UseHttps();
+        policy.AllowAnyOrigin()
+              .AllowAnyMethod()
+              .AllowAnyHeader();
     });
 });
 
@@ -112,7 +119,7 @@ endpointGroup.MapGet("by-doctor-id/{doctorId:Guid}", [Authorize(Roles = "Doctor,
 .Produces<AppointmentDTO>(StatusCodes.Status200OK)
 .Produces(StatusCodes.Status204NoContent);
 
-app.UseHttpsRedirection();
+app.UseCors("AllowAll");
 app.UseAuthentication();
 app.UseAuthorization();
 

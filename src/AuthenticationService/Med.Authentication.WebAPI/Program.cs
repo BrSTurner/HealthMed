@@ -18,9 +18,16 @@ builder.Services.AddMessageBus();
 
 builder.WebHost.ConfigureKestrel(options =>
 {
-    options.ListenAnyIP(8082, listenOptions =>
+    options.ListenAnyIP(8082);
+});
+
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAll", policy =>
     {
-        listenOptions.UseHttps();
+        policy.AllowAnyOrigin()
+              .AllowAnyMethod()
+              .AllowAnyHeader();
     });
 });
 
@@ -33,8 +40,6 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
-
-app.UseHttpsRedirection();
 
 var group = app.MapGroup("/api/auth");
 
@@ -55,5 +60,7 @@ group.MapPost("Login", async (AuthenticateInput input, IAuthService authService)
 .Produces<Ok>()
 .Produces<UnauthorizedHttpResult>()
 .Produces<BadRequest>();
+
+app.UseCors("AllowAll");
 
 app.Run();
