@@ -20,8 +20,7 @@ namespace Med.Infrastructure.Repositories
             return await _users
                 .Include(u => u.Roles)
                 .FirstOrDefaultAsync(u => 
-                    u.Username.ToLower() ==  username.ToLower() || (!string.IsNullOrEmpty(email) && 
-                    u.Email.Address.ToLower() == email.ToLower()));
+                    u.Username ==  username || (!string.IsNullOrEmpty(email) && u.Email.Address.ToLower() == email.ToLower()));
         }
     }
 }
