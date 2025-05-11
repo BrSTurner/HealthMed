@@ -16,7 +16,7 @@ namespace Med.Infrastructure.Extensions
             services.AddScoped<ICalendarRepository, CalendarRepository>();
             services.AddScoped<IUnitOfWork, UnitOfWork>();
 
-            if(useInMemory)
+            if (useInMemory)
                 services.AddDbContext<CalendarContext>(c => c.UseInMemoryDatabase("Calendars"));
             else
                 services.AddDbContext<CalendarContext>(c => c.UseSqlServer(configuration.GetConnectionString("DefaultConnection")));

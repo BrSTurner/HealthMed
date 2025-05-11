@@ -15,7 +15,7 @@ namespace Med.Infrastructure.Extensions
             services.AddScoped<IAppointmentRepository, AppointmentRepository>();
             services.AddScoped<IUnitOfWork, UnitOfWork>();
 
-            if(useInMemory)
+            if (useInMemory)
                 services.AddDbContext<AppointmentContext>(c => c.UseInMemoryDatabase("Appointments"));
             else
                 services.AddDbContext<AppointmentContext>(c => c.UseSqlServer(configuration.GetConnectionString("DefaultConnection")));

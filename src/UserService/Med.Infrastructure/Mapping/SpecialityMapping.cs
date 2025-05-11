@@ -1,6 +1,7 @@
 ﻿using Med.Domain.Entites;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Med.Infrastructure.Mapping
 {
@@ -8,6 +9,9 @@ namespace Med.Infrastructure.Mapping
     {
         public void Configure(EntityTypeBuilder<Speciality> builder)
         {
+
+            builder.Property(x => x.CreatedAt);
+
             builder.ToTable("Specialities");
 
             builder.HasKey(x => x.Id);

@@ -1,6 +1,7 @@
 ﻿using Med.Domain.Entites;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Med.Infrastructure.Mapping
 {
@@ -14,6 +15,7 @@ namespace Med.Infrastructure.Mapping
 
             builder.Property(x => x.Name).IsRequired();
             builder.Property(x => x.UserId).IsRequired();
+            builder.Property(x => x.CreatedAt);
             
             builder.HasOne(x => x.Speciality)
                 .WithMany(x => x.Doctors)

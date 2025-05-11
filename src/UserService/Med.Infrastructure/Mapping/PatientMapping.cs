@@ -14,6 +14,7 @@ namespace Med.Infrastructure.Mapping
 
             builder.Property(x => x.Name).IsRequired();
             builder.Property(x => x.UserId).IsRequired();
+            builder.Property(x => x.CreatedAt);
 
             builder.OwnsOne(x => x.CPF, cpfBuilder =>
             {
