@@ -3,14 +3,11 @@ using Med.Application.Models;
 using Med.Application.Services;
 using Med.Infrastructure.Data;
 using Med.Infrastructure.Extensions;
-using Med.SharedAuth;
-using Microsoft.OpenApi.Models;
-using Microsoft.AspNetCore.Authorization;
-using Med.Infrastructure.Data;
-using Med.Migrator;
 using Med.MessageBus.Extensions;
 using Med.Migrator;
-using Med.SharedKernel.Enumerations;
+using Med.SharedAuth;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.OpenApi.Models;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -51,7 +48,10 @@ builder.Services.AddAuthorizationServices(builder.Configuration);
 
 builder.WebHost.ConfigureKestrel(options =>
 {
-    options.ListenAnyIP(8081);
+    options.ListenAnyIP(8084, listenOptions =>
+    {
+        listenOptions.UseHttps();
+    });
 });
 
 var app = builder.Build();
@@ -67,7 +67,7 @@ if (app.Environment.IsDevelopment())
 var endpointGroup = app
     .MapGroup("api/calendar");
 
-endpointGroup.MapPost(string.Empty, async (CreateDoctorCalendarInput input, ICalendarService calendarService) =>
+endpointGroup.MapPost(string.Empty, [Authorize(Roles = "Doctor")] async (CreateDoctorCalendarInput input, ICalendarService calendarService) =>
 {
     var dto = await calendarService.CreateDoctorCalendar(input);
     return Results.Created($"/calendar/{dto.Data}", dto);
@@ -78,7 +78,7 @@ endpointGroup.MapPost(string.Empty, async (CreateDoctorCalendarInput input, ICal
 .Produces<string>(StatusCodes.Status400BadRequest);
 
 
-endpointGroup.MapPut(string.Empty, (UpdateDoctorCalendarInput input, ICalendarService calendarService) =>
+endpointGroup.MapPut(string.Empty, [Authorize(Roles = "Doctor")] (UpdateDoctorCalendarInput input, ICalendarService calendarService) =>
 {
     calendarService.UpdateDoctorCalendar(input);
     return Results.Ok();
@@ -104,7 +104,7 @@ endpointGroup.MapGet("by-calendar-id/{calendarId:Guid}", [Authorize(Roles = "Doc
 .Produces(StatusCodes.Status204NoContent);
 
 
-endpointGroup.MapGet("by-doctor-id/{doctorId:Guid}", async (Guid doctorId, ICalendarService calendarService) =>
+endpointGroup.MapGet("by-doctor-id/{doctorId:Guid}", [Authorize(Roles = "Doctor,Patient")] async (Guid doctorId, ICalendarService calendarService) =>
 {
     var result = await calendarService.GetCalendarByDoctorId(doctorId);
 

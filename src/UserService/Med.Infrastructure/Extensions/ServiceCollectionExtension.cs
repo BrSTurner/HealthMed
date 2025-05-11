@@ -18,6 +18,14 @@ namespace Med.Infrastructure.Extensions
             services.AddScoped<ISpecialityRepository, SpecialityRepository>();
             services.AddScoped<IUnitOfWork, UnitOfWork>();
 
+            var dockerSqlConnectionString = configuration["SQL_CONNECTION_STRING"];
+            
+            if (!string.IsNullOrEmpty(dockerSqlConnectionString))
+            {
+                services.AddDbContext<UserContext>(c => c.UseSqlServer(configuration["SQL_CONNECTION_STRING"]));
+                return;
+            }
+
             if(useInMemory)
                 services.AddDbContext<UserContext>(c => c.UseInMemoryDatabase("Users"));
             else

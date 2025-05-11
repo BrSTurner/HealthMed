@@ -15,6 +15,14 @@ namespace Med.Infrastructure.Extensions
             services.AddScoped<IAppointmentRepository, AppointmentRepository>();
             services.AddScoped<IUnitOfWork, UnitOfWork>();
 
+            var dockerSqlConnectionString = configuration["SQL_CONNECTION_STRING"];
+
+            if (!string.IsNullOrEmpty(dockerSqlConnectionString))
+            {
+                services.AddDbContext<AppointmentContext>(c => c.UseSqlServer(configuration["SQL_CONNECTION_STRING"]));
+                return;
+            }
+
             if (useInMemory)
                 services.AddDbContext<AppointmentContext>(c => c.UseInMemoryDatabase("Appointments"));
             else

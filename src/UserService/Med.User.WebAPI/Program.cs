@@ -9,13 +9,39 @@ using Med.MessageBus.Integration.Responses.Users;
 using Med.Migrator;
 using Med.SharedAuth;
 using Med.SharedKernel.DomainObjects;
-using Microsoft.AspNetCore.Http.HttpResults;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Configuration.AddEnvironmentVariables();
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.AddSwaggerGen(c =>
+{
+    c.SwaggerDoc("v1", new OpenApiInfo { Title = "User API", Version = "v1" });
+
+    var jwtSecurityScheme = new OpenApiSecurityScheme
+    {
+        Scheme = "bearer",
+        BearerFormat = "JWT",
+        Name = "Authorization",
+        In = ParameterLocation.Header,
+        Type = SecuritySchemeType.Http,
+        Description = "Enter your JWT token below:",
+        Reference = new OpenApiReference
+        {
+            Id = "Bearer",
+            Type = ReferenceType.SecurityScheme
+        }
+    };
+
+    c.AddSecurityDefinition("Bearer", jwtSecurityScheme);
+
+    c.AddSecurityRequirement(new OpenApiSecurityRequirement
+    {
+        { jwtSecurityScheme, Array.Empty<string>() }
+    });
+});
 builder.Services.AddApplication(builder.Configuration);
 builder.Services.AddInfrastructure(builder.Configuration, false);
 builder.Services.AddMessageBus();
@@ -23,7 +49,10 @@ builder.Services.AddAuthorizationServices(builder.Configuration);
 
 builder.WebHost.ConfigureKestrel(options =>
 {
-    options.ListenAnyIP(8081);
+    options.ListenAnyIP(8081, listenOptions =>
+    {
+        listenOptions.UseHttps();       
+    });
 });
 
 var app = builder.Build();
@@ -41,7 +70,7 @@ app.UseHttpsRedirection();
 
 var group = app.MapGroup("/api/user");
 
-group.MapPost("Create", async (CreateUserInput input, IUserService userService) =>
+group.MapPost("Create", [AllowAnonymous] async (CreateUserInput input, IUserService userService) =>
 {
     if (input is null)
         return Results.BadRequest();
@@ -58,7 +87,7 @@ group.MapPost("Create", async (CreateUserInput input, IUserService userService) 
 .Produces<CreateUserResponse>(StatusCodes.Status201Created) 
 .Produces<IEnumerable<string>>(StatusCodes.Status400BadRequest); 
 
-group.MapGet("GetPatient", async (string cpf, IUserService userService) =>
+group.MapGet("GetPatient", [Authorize(Roles = "Doctor,Patient")] async (string cpf, IUserService userService) =>
 {
     if (string.IsNullOrWhiteSpace(cpf))
         return Results.BadRequest();
@@ -78,7 +107,7 @@ group.MapGet("GetPatient", async (string cpf, IUserService userService) =>
 .Produces(StatusCodes.Status400BadRequest)
 .Produces(StatusCodes.Status404NotFound);
 
-group.MapGet("GetDoctor", async (string crm, IUserService userService) =>
+group.MapGet("GetDoctor", [Authorize(Roles = "Doctor,Patient")] async (string crm, IUserService userService) =>
 {
     if (string.IsNullOrWhiteSpace(crm))
         return Results.BadRequest();

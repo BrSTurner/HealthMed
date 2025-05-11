@@ -16,10 +16,6 @@ spec:
         app: auth-webapi
     spec:
       initContainers:
-        # - name: wait-for-postgres
-          # image: busybox
-          # command: ['sh', '-c', 'until nc -z postgres-service 5432; do echo waiting for postgres; sleep 2; done;']
-        
         - name: wait-for-rabbitmq
           image: busybox
           command: ['sh', '-c', 'until nc -z rabbitmq-service 5672; do echo waiting for rabbitmq; sleep 2; done;']
@@ -28,7 +24,7 @@ spec:
         image: auth-service:latest
         imagePullPolicy: Never
         ports:
-          - containerPort: 8081
+          - containerPort: 8082
         env:
           - name: RABBITMQ_HOST
             valueFrom:
@@ -50,8 +46,8 @@ spec:
               configMapKeyRef:
                 name: webapi-config
                 key: ASPNETCORE_ENVIRONMENT
-          - name: POSTGRES_CONNECTION_STRING
+          - name: SQL_CONNECTION_STRING
             valueFrom:
               secretKeyRef:
                 name: services-secret
-                key: CONNECTION_STRING
+                key: AUTH_CONNECTION_STRING

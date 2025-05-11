@@ -8,6 +8,7 @@ using Med.SharedAuth;
 using Microsoft.OpenApi.Models;
 using Med.Infrastructure.Data;
 using Med.Migrator;
+using Microsoft.AspNetCore.Authorization;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -48,7 +49,10 @@ builder.Services.AddAuthorizationServices(builder.Configuration);
 
 builder.WebHost.ConfigureKestrel(options =>
 {
-    options.ListenAnyIP(8081);
+    options.ListenAnyIP(8083, listenOptions =>
+    {
+        listenOptions.UseHttps();
+    });
 });
 
 var app = builder.Build();
@@ -64,7 +68,7 @@ if (app.Environment.IsDevelopment())
 var endpointGroup = app
     .MapGroup("api/appointments");
 
-endpointGroup.MapPatch("reply/", (ReplyAppointmentInput replyAppointment, IAppointmentService appointmentService) =>
+endpointGroup.MapPatch("reply/", [Authorize(Roles = "Doctor")] (ReplyAppointmentInput replyAppointment, IAppointmentService appointmentService) =>
 {
     appointmentService.ReplyAppointment(replyAppointment);
     return Results.Ok();
@@ -74,7 +78,7 @@ endpointGroup.MapPatch("reply/", (ReplyAppointmentInput replyAppointment, IAppoi
 .Produces<Ok>()
 .Produces<BadRequest>();
 
-endpointGroup.MapPost(string.Empty, async (CreateAppointmentInput createAppointment, IAppointmentService appointmentService) =>
+endpointGroup.MapPost(string.Empty, [Authorize(Roles = "Doctor,Patient")] async (CreateAppointmentInput createAppointment, IAppointmentService appointmentService) =>
 {
     var dto = await appointmentService.CreateAppointment(createAppointment);
     return Results.Created($"/appointment/{dto.Data}", dto);
@@ -84,7 +88,7 @@ endpointGroup.MapPost(string.Empty, async (CreateAppointmentInput createAppointm
 .Produces<Created<Guid>>()
 .Produces<BadRequest>();
 
-endpointGroup.MapPatch("cancel/", (CancelAppointmentInput cancelAppointment, IAppointmentService appointmentService) =>
+endpointGroup.MapPatch("cancel/", [Authorize(Roles = "Patient")] (CancelAppointmentInput cancelAppointment, IAppointmentService appointmentService) =>
 {
     appointmentService.CancelAppointment(cancelAppointment);
     return Results.Ok();
@@ -94,7 +98,7 @@ endpointGroup.MapPatch("cancel/", (CancelAppointmentInput cancelAppointment, IAp
 .Produces<Ok>()
 .Produces<BadRequest>();
 
-endpointGroup.MapGet("by-doctor-id/{doctorId:Guid}", async (Guid doctorId, IAppointmentService appointmentService) =>
+endpointGroup.MapGet("by-doctor-id/{doctorId:Guid}", [Authorize(Roles = "Doctor,Patient")] async (Guid doctorId, IAppointmentService appointmentService) =>
 {
     var result = await appointmentService.GetAppointmentsByDoctor(doctorId);
 

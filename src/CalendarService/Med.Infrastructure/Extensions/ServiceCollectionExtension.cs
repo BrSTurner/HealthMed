@@ -17,6 +17,14 @@ namespace Med.Infrastructure.Extensions
             services.AddScoped<IBookingTimeRepository, BookingTimeRepository>();
             services.AddScoped<IUnitOfWork, UnitOfWork>();
 
+            var dockerSqlConnectionString = configuration["SQL_CONNECTION_STRING"];
+
+            if (!string.IsNullOrEmpty(dockerSqlConnectionString))
+            {
+                services.AddDbContext<CalendarContext>(c => c.UseSqlServer(configuration["SQL_CONNECTION_STRING"]));
+                return;
+            }
+
             if (useInMemory)
                 services.AddDbContext<CalendarContext>(c => c.UseInMemoryDatabase("Calendars"));
             else

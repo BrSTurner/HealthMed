@@ -18,7 +18,10 @@ builder.Services.AddMessageBus();
 
 builder.WebHost.ConfigureKestrel(options =>
 {
-    options.ListenAnyIP(8081);
+    options.ListenAnyIP(8082, listenOptions =>
+    {
+        listenOptions.UseHttps();
+    });
 });
 
 var app = builder.Build();
