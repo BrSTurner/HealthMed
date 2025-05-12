@@ -23,7 +23,7 @@ namespace Med.Application.Services
         {
             var alreadyExistedCalendar = await _calendarRepository.GetCalendarByDoctorId(input.DoctorId);
 
-            if (alreadyExistedCalendar != null) return DomainResult.Error("Já tem um calendario para este médico!");
+            if (alreadyExistedCalendar != null) return DomainResult.Error("Este médico já possui uma agenda");
 
             var calendar = new Calendar()
             {
@@ -80,7 +80,7 @@ namespace Med.Application.Services
                 return new UpdateCalendarAppointmentResponse
                 {
                     Success = false,
-                    ErrorMessage = "Horário selecionado não foi possível de ser achado"
+                    ErrorMessage = "Horário selecionado não foi encontrado"
                 };
             }
 
