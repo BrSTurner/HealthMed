@@ -6,7 +6,7 @@ namespace Med.Domain.Entities
     public class BookingTime : Entity, IAggregateRoot
     {
         public required Guid CalendarId { get; set; }
-        public required Calendar Calendar { get; set; }
+        public Calendar? Calendar { get; set; }
         public required DateTime Date { get; set; }
         public TimeSpan ConsultDuration { get; set; }
         public required BookingTimeStatus Status { get; set; }

@@ -5,7 +5,7 @@ namespace Med.Domain.Repositories
 {
     public interface IAppointmentRepository : IRepository<Appointment>
     {
-        void AddAppointmentAsync(Appointment doctor);
+        Task AddAppointmentAsync(Appointment appointment);
 
         Task<Appointment?> GetAppointmentByIdAsync(Guid id);
 

@@ -91,7 +91,7 @@ namespace Med.Application.Services
                 Status = AppointmentStatus.Pending
             };
 
-            _appointmentRepository.AddAppointmentAsync(appointment);
+            await _appointmentRepository.AddAppointmentAsync(appointment);
 
             var dto = MapAppointmentDTO(appointment);
 
@@ -144,7 +144,7 @@ namespace Med.Application.Services
             return DomainResult.Error("Nao foi possivel responder a consulta");
         }
 
-        private AppointmentDTO MapAppointmentDTO(Appointment entity)
+        private static AppointmentDTO MapAppointmentDTO(Appointment entity)
         {
             return new AppointmentDTO
             {

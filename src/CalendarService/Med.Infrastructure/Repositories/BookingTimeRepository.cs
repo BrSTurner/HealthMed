@@ -15,7 +15,7 @@ namespace Med.Infrastructure.Repositories
             _entity = _context.Set<BookingTime>();
         }
 
-        public async void CreateCalendarBookingTime(List<BookingTime> bookingTimes)
+        public async Task CreateCalendarBookingTime(List<BookingTime> bookingTimes)
         {
             await _entity.AddRangeAsync(bookingTimes);
         }

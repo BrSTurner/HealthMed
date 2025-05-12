@@ -9,6 +9,7 @@ namespace Med.Domain.Repositories
 
         Task<Calendar?> GetCalendarByDoctorId(Guid doctorId);
 
-        void CreateDoctorCalendar(Calendar calendar);
+        Task CreateDoctorCalendar(Calendar calendar);
+        Task CreateBookingTime(List<BookingTime> bookingTimes);
     }
 }

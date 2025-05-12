@@ -85,9 +85,9 @@ endpointGroup.MapPost(string.Empty, [Authorize(Roles = "Doctor")] async (CreateD
 .Produces<string>(StatusCodes.Status400BadRequest);
 
 
-endpointGroup.MapPut(string.Empty, [Authorize(Roles = "Doctor")] (UpdateDoctorCalendarInput input, ICalendarService calendarService) =>
+endpointGroup.MapPut(string.Empty, [Authorize(Roles = "Doctor")] async (UpdateDoctorCalendarInput input, ICalendarService calendarService) =>
 {
-    calendarService.UpdateDoctorCalendar(input);
+    await calendarService.UpdateDoctorCalendar(input);
     return Results.Ok();
 })
 .WithTags("Calendar")

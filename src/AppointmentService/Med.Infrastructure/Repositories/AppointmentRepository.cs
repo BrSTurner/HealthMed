@@ -24,7 +24,7 @@ namespace Med.Domain.Repositories
             return await _entity.FindAsync(id);
         }
 
-        public async void AddAppointmentAsync(Appointment appointment)
+        public async Task AddAppointmentAsync(Appointment appointment)
         {
             await _entity.AddAsync(appointment);
         }

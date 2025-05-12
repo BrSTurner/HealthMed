@@ -19,17 +19,17 @@ namespace Med.Infrastructure.Repositories
         {
             return await _entity
                 .Include(x => x.Bookings)
-                .FirstAsync(x => x.Id == id);
+                .FirstOrDefaultAsync(x => x.Id == id);
         }
 
-        public async void CreateDoctorCalendar(Calendar calendar)
+        public async Task CreateDoctorCalendar(Calendar calendar)
         {
             await _entity.AddAsync(calendar);
         }
 
-        public void CreateBookingTime(List<BookingTime> bookingTimes)
+        public async Task CreateBookingTime(List<BookingTime> bookingTimes)
         {
-            _context.AddRangeAsync(bookingTimes);
+            await _context.AddRangeAsync(bookingTimes);
         }
 
         public async Task<Calendar?> GetCalendarByDoctorId(Guid doctorId)
