@@ -24,5 +24,10 @@ namespace Med.Infrastructure.Repositories
         {
             return await _entity.FindAsync(id);
         }
+
+        public void UpdateCalendarBookingTime(List<BookingTime> bookingTimes)
+        {
+            _entity.UpdateRange(bookingTimes);
+        }
     }
 }

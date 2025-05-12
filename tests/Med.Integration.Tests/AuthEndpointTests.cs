@@ -46,7 +46,7 @@ namespace Med.Integration.Tests
             var client = _fixture.Client;
 
             //Act
-            var response = await client.PostAsJsonAsync("/api/auth/login", new AuthenticateInput { UsernameOrEmail = user.Email.Address, Password = "Password" });
+            var response = await client.PostAsJsonAsync("/api/auth/login", new AuthenticateInput { UsernameOrEmail = user.Email?.Address ?? string.Empty, Password = "Password" });
 
             //Assert
             response.EnsureSuccessStatusCode();

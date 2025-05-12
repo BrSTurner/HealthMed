@@ -66,7 +66,7 @@ namespace Med.Application.Services
                 return null;
             }
 
-            var dto =  MapCalendarDto(entity);
+            var dto = MapCalendarDto(entity);
 
             return dto;
         }
@@ -118,9 +118,13 @@ namespace Med.Application.Services
             calendar.Price = input.Price ?? calendar.Price;
 
             var newBookingsTime = input.Bookings.Where(x => !x.Id.HasValue).Select(x => MapBookingTime(x, calendar)).ToList();
+            var oldBookingTime = input.Bookings.Where(x => x.Id.HasValue).Select(x => MapBookingTime(x, calendar)).ToList();
 
-            if (newBookingsTime.Count != 0)
+            if (newBookingsTime.Count > 0)
                 await _bookingTimeRepository.CreateCalendarBookingTime(newBookingsTime);
+
+            if (oldBookingTime.Count > 0)
+                _bookingTimeRepository.UpdateCalendarBookingTime(oldBookingTime);
 
             if (await _unitOfWork.SaveChanges())
                 return DomainResult.Success();
@@ -132,6 +136,7 @@ namespace Med.Application.Services
         {
             return new BookingTime
             {
+                Id = input.Id ?? Guid.NewGuid(),
                 CalendarId = entity.Id,
                 CreatedAt = DateTime.Now,
                 Status = BookingTimeStatus.Available,
@@ -155,7 +160,7 @@ namespace Med.Application.Services
             return new CalendarDTO
             {
                 Id = entity.Id,
-                Bookings = entity.Bookings.Select(x => MapBookingTimeDto(x)).ToList() ?? new List<BookingTimeDto>(),
+                Bookings = entity.Bookings?.Select(MapBookingTimeDto)?.ToList() ?? [],
                 Price = entity.Price,
             };
         }

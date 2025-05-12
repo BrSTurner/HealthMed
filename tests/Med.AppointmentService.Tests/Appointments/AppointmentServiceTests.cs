@@ -66,7 +66,7 @@ namespace Med.AppointmentTests
 
             // Assert
             result.IsSuccess.ShouldBeTrue();
-            _appointmentRepository.Received(1).AddAppointmentAsync(Arg.Any<Appointment>());
+            await _appointmentRepository.Received(1).AddAppointmentAsync(Arg.Any<Appointment>());
             await _unitOfWork.Received(1).SaveChanges();
         }
 

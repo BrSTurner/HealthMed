@@ -130,8 +130,8 @@ namespace Med.Auth.Tests
 
             // Assert
             actualResponse.Success.ShouldBeFalse();
-            actualResponse.ErrorMessage.ShouldContain("Algo deu errado ao criar o usuário");
-            actualResponse.ErrorMessage.ShouldContain("Connection timeout");
+            actualResponse.ErrorMessage?.ShouldContain("Algo deu errado ao criar o usuário");
+            actualResponse.ErrorMessage?.ShouldContain("Connection timeout");
         }
     }
 }

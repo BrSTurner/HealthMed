@@ -44,7 +44,7 @@ namespace Med.User.Tests
             var result = await _service.CreateUser(input);
 
             result.IsSuccess.ShouldBeFalse();
-            result.Errors.ShouldContain("Required");
+            result.Errors?.ShouldContain("Required");
         }
 
         [Fact(DisplayName = "CRM Exists")]
@@ -60,12 +60,12 @@ namespace Med.User.Tests
                 SpecialityId = Guid.NewGuid()
             };
             var input = CreateDoctorInput();
-            _doctorRepo.GetDoctorByCRM(input.CRM).Returns(doctor);
+            _doctorRepo.GetDoctorByCRM(input.CRM ?? string.Empty).Returns(doctor);
 
             var result = await _service.CreateUser(input);
 
             result.IsSuccess.ShouldBeFalse();
-            result.Errors.ShouldContain("CRM já registrado anteriormente");
+            result.Errors?.ShouldContain("CRM já registrado anteriormente");
         }
 
         [Fact(DisplayName = "CPF and E-mail Exists")]
@@ -80,21 +80,21 @@ namespace Med.User.Tests
                 Email = Email.Create("test@test.com"),
                 CPF = CPF.Create("123.456.789-09") 
             };
-            _patientRepo.GetPatientByCPFAsync(input.CPF).Returns(patient);
+            _patientRepo.GetPatientByCPFAsync(input.CPF ?? string.Empty).Returns(patient);
 
             var result = await _service.CreateUser(input);
 
             result.IsSuccess.ShouldBeFalse();
-            result.Errors.ShouldContain("CPF já registrado anteriormente");
+            result.Errors?.ShouldContain("CPF já registrado anteriormente");
 
             // Test email too
-            _patientRepo.GetPatientByCPFAsync(input.CPF).Returns((Patient?)null);
-            _patientRepo.GetPatientByEmailAsync(input.Email).Returns(patient);
+            _patientRepo.GetPatientByCPFAsync(input.CPF ?? string.Empty).Returns((Patient?)null);
+            _patientRepo.GetPatientByEmailAsync(input.Email ?? string.Empty).Returns(patient);
 
             result = await _service.CreateUser(input);
 
             result.IsSuccess.ShouldBeFalse();
-            result.Errors.ShouldContain("E-mail já registrado anteriormente");
+            result.Errors?.ShouldContain("E-mail já registrado anteriormente");
         }
 
         [Fact(DisplayName = "Create Doctor")]
@@ -102,7 +102,7 @@ namespace Med.User.Tests
         public async Task CreateUser_ShouldReturnSuccess_WhenDoctorCreatedSuccessfully()
         {
             var input = CreateDoctorInput();
-            _doctorRepo.GetDoctorByCRM(input.CRM).Returns((Doctor?)null);
+            _doctorRepo.GetDoctorByCRM(input.CRM ?? string.Empty).Returns((Doctor?)null);
             var response = new CreateUserResponse { Success = true, UserId = Guid.NewGuid() };
             _bus.RequestAsync<CreateUserRequest, CreateUserResponse>(Arg.Any<CreateUserRequest>())
                 .Returns(response);
@@ -118,8 +118,8 @@ namespace Med.User.Tests
         public async Task CreateUser_ShouldReturnSuccess_WhenPatientCreatedSuccessfully()
         {
             var input = CreatePatientInput();
-            _patientRepo.GetPatientByCPFAsync(input.CPF).Returns((Patient?)null);
-            _patientRepo.GetPatientByEmailAsync(input.Email).Returns((Patient?)null);
+            _patientRepo.GetPatientByCPFAsync(input.CPF ?? string.Empty).Returns((Patient?)null);
+            _patientRepo.GetPatientByEmailAsync(input.Email ?? string.Empty).Returns((Patient?)null);
             var response = new CreateUserResponse { Success = true, UserId = Guid.NewGuid() };
             _bus.RequestAsync<CreateUserRequest, CreateUserResponse>(Arg.Any<CreateUserRequest>())
                 .Returns(response);

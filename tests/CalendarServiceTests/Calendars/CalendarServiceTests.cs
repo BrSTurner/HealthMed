@@ -13,7 +13,6 @@ namespace Med.CalendarTests
 {
     public class CalendarServiceTests
     {
-        private readonly IMessageBus _bus = Substitute.For<IMessageBus>();
         private readonly ICalendarRepository _calendarRepository = Substitute.For<ICalendarRepository>();
         private readonly IBookingTimeRepository _bookingTimeRepository = Substitute.For<IBookingTimeRepository>();
         private readonly IUnitOfWork _unitOfWork = Substitute.For<IUnitOfWork>();
@@ -22,7 +21,7 @@ namespace Med.CalendarTests
 
         public CalendarServiceTests()
         {
-            _service = new CalendarService(_bus, _calendarRepository, _bookingTimeRepository, _unitOfWork);
+            _service = new CalendarService(_calendarRepository, _bookingTimeRepository, _unitOfWork);
         }
 
         [Fact(DisplayName = "Create Calendar")]
@@ -62,8 +61,8 @@ namespace Med.CalendarTests
 
             // Assert
             result.IsSuccess.ShouldBeTrue();
-            _calendarRepository.Received(1).CreateDoctorCalendar(Arg.Any<Calendar>());
-             _bookingTimeRepository.Received(1).CreateCalendarBookingTime(Arg.Any<List<BookingTime>>());
+            await _calendarRepository.Received(1).CreateDoctorCalendar(Arg.Any<Calendar>());
+            await _bookingTimeRepository.Received(1).CreateCalendarBookingTime(Arg.Any<List<BookingTime>>());
         }
 
 
@@ -120,7 +119,7 @@ namespace Med.CalendarTests
 
             // Assert
             result.Success.ShouldBeFalse();
-            result.ErrorMessage.ShouldContain("não foi possível");
+            result.ErrorMessage?.ShouldContain("não foi possível");
         }
 
         [Fact(DisplayName = "Update Doctor Calendar")]
@@ -135,7 +134,7 @@ namespace Med.CalendarTests
             var result = await _service.UpdateDoctorCalendar(input);
 
             // Assert
-            result.Errors.ShouldContain("Nao foi possivel achar o calendario do Doutor especificado!");
+            result.Errors?.ShouldContain("Nao foi possivel achar o calendario do Doutor especificado!");
         }
 
         [Fact(DisplayName = "Update Valid Doctor Calendar")]

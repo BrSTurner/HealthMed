@@ -7,6 +7,8 @@ namespace Med.Domain.Repositories
     {
         Task CreateCalendarBookingTime(List<BookingTime> bookingTimes);
 
+        void UpdateCalendarBookingTime(List<BookingTime> bookingTimes);
+
         Task<BookingTime?> GetBookingTimeById(Guid id);
     }
 }

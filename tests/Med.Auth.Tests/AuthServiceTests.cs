@@ -6,6 +6,7 @@ using Med.Domain.Repositories;
 using Med.SharedKernel.DomainObjects;
 using Med.SharedKernel.UoW;
 using NSubstitute;
+using NSubstitute.ReturnsExtensions;
 using Shouldly;
 
 namespace Med.Auth.Tests
@@ -31,8 +32,8 @@ namespace Med.Auth.Tests
         {
             // Arrange
             var user = TestData.ValidUser();
-            _userRepo.GetByEmailOrUsernameAsync(user.Username, user.Email.Address).Returns((User)null);
-            _passwordService.HashPassword(user.PasswordHash).Returns("hashed");
+            _userRepo.GetByEmailOrUsernameAsync(user.Username, user.Email?.Address ?? string.Empty).ReturnsNull();
+            _passwordService.HashPassword(user.PasswordHash ?? string.Empty).Returns("hashed");
 
             // Act
             var result = await _authService.CreateUser(user);
@@ -50,7 +51,7 @@ namespace Med.Auth.Tests
         {
             // Arrange
             var user = TestData.ValidUser();
-            _userRepo.GetByEmailOrUsernameAsync(user.Username, user.Email.Address).Returns(user);
+            _userRepo.GetByEmailOrUsernameAsync(user.Username, user.Email?.Address ?? string.Empty).Returns(user);
 
             // Act & Assert
             await Should.ThrowAsync<UserAlreadyCreatedException>(() => _authService.CreateUser(user));
@@ -81,7 +82,7 @@ namespace Med.Auth.Tests
         public async Task Authenticate_ShouldThrow_WhenUserNotFound()
         {
             // Arrange
-            _userRepo.GetByEmailOrUsernameAsync("missing", "missing").Returns((User)null);
+            _userRepo.GetByEmailOrUsernameAsync("missing", "missing").ReturnsNull();
 
             // Act & Assert
             await Should.ThrowAsync<UnauthorizedAccessException>(() => _authService.Authenticate("missing", "password"));

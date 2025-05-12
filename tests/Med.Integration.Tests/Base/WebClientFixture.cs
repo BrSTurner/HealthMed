@@ -33,12 +33,10 @@ namespace Med.Integration.Tests.Base
                     var sp = services.BuildServiceProvider();
                     ScopeFactory = sp.GetRequiredService<IServiceScopeFactory>();
 
-                    using (var scope = sp.CreateScope())
-                    {
-                        var scopedServices = scope.ServiceProvider;
-                        var db = scopedServices.GetRequiredService<AuthContext>();
-                        db.Database.EnsureCreated();
-                    }
+                    using var scope = sp.CreateScope();
+                    var scopedServices = scope.ServiceProvider;
+                    var db = scopedServices.GetRequiredService<AuthContext>();
+                    db.Database.EnsureCreated();
                 });
             });
 
@@ -79,9 +77,12 @@ namespace Med.Integration.Tests.Base
             if (user == null)
                 return null;
 
-            using (var scope = ScopeFactory?.CreateScope())
+            if (ScopeFactory == null)
+                return null;
+
+            using (var scope = ScopeFactory.CreateScope())
             {
-                var db = scope?.ServiceProvider.GetRequiredService<AuthContext>();
+                var db = scope.ServiceProvider.GetRequiredService<AuthContext>();
                 await db.AddAsync(user);
                 await db.SaveChangesAsync();
             }
@@ -93,6 +94,7 @@ namespace Med.Integration.Tests.Base
         {
             _sqliteConnection.Close();
             _factory?.Dispose();
+            GC.SuppressFinalize(this);
         }
     }
 }

@@ -7,8 +7,8 @@ namespace Med.Infrastructure.Repositories
 {
     public class UserRepository(AuthContext context) : IUserRepository
     {
-        private readonly AuthContext _context = context;
         private readonly DbSet<User> _users = context.Set<User>();
+
         public async Task<User> AddAsync(User user)
         {
             var entitySet = await _users.AddAsync(user);
@@ -19,8 +19,8 @@ namespace Med.Infrastructure.Repositories
         {
             return await _users
                 .Include(u => u.Roles)
-                .FirstOrDefaultAsync(u => 
-                    u.Username ==  username || (!string.IsNullOrEmpty(email) && u.Email.Address.ToLower() == email.ToLower()));
+                .FirstOrDefaultAsync(u =>
+                    u.Username == username || (!string.IsNullOrEmpty(email) && u.Email.Address.ToLower() == email.ToLower()));
         }
     }
 }

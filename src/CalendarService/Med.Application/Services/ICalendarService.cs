@@ -7,9 +7,9 @@ namespace Med.Application.Services
 {
     public interface ICalendarService
     {
-        Task<CalendarDTO> GetCalendarById(Guid calendarId);
+        Task<CalendarDTO?> GetCalendarById(Guid calendarId);
 
-        Task<CalendarDTO> GetCalendarByDoctorId(Guid doctorId);
+        Task<CalendarDTO?> GetCalendarByDoctorId(Guid doctorId);
 
         Task<DomainResult> CreateDoctorCalendar(CreateDoctorCalendarInput createDoctorCalendarInput);
 

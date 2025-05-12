@@ -1,0 +1,10 @@
+﻿[*.cs]
+
+# CS8602: Desreferência de uma referência possivelmente nula.
+dotnet_diagnostic.CS8602.severity = none
+
+# CA1304: Especificar CultureInfo
+dotnet_diagnostic.CA1304.severity = none
+
+# CA1862: Use as sobrecargas do método 'StringComparison' para realizar comparações de strings que não diferenciam maiúsculas de minúsculas
+dotnet_diagnostic.CA1862.severity = none

@@ -35,7 +35,7 @@ namespace Med.Application.Services
             var calendarResponse = await UpdateCalendarIfAvailable(checkCalendarRequest);
             if (!calendarResponse.Success)
             {
-                return DomainResult.Error(calendarResponse.ErrorMessage);
+                return DomainResult.Error(calendarResponse.ErrorMessage ?? string.Empty);
             }
 
             var appointment = await _appointmentRepository.GetAppointmentByIdAsync(input.AppointmentId);
@@ -80,7 +80,7 @@ namespace Med.Application.Services
             var calendarResponse = await UpdateCalendarIfAvailable(checkCalendarRequest);
             if (!calendarResponse.Success)
             {
-                return DomainResult.Error(calendarResponse.ErrorMessage);
+                return DomainResult.Error(calendarResponse.ErrorMessage ?? string.Empty);
             }
 
             var appointment = new Appointment
@@ -117,12 +117,14 @@ namespace Med.Application.Services
                 DomainResult.Error(validationResult);
 
             var appointment = await _appointmentRepository.GetAppointmentByIdAsync(input.AppointmentId);
-            if (appointment != null)
+            if (appointment == null)
             {
-                appointment.Status = input.Status;
+                return DomainResult.Error("Nao foi possivel encontrar o agendamento!");
             }
 
-            if(appointment.Status == AppointmentStatus.Refused)
+            appointment.Status = input.Status;
+
+            if (appointment.Status == AppointmentStatus.Refused)
             {
                 var checkCalendarRequest = new UpdateCalendarAppointmentRequest
                 {
@@ -133,7 +135,7 @@ namespace Med.Application.Services
                 var calendarResponse = await UpdateCalendarIfAvailable(checkCalendarRequest);
                 if (!calendarResponse.Success)
                 {
-                    return DomainResult.Error(calendarResponse.ErrorMessage);
+                    return DomainResult.Error(calendarResponse.ErrorMessage ?? string.Empty);
                 }
             }
 
