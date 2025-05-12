@@ -27,7 +27,7 @@ namespace Med.Infrastructure.Data
             if (!optionsBuilder.IsConfigured)
             {
                 optionsBuilder.UseInMemoryDatabase("Calendars");
-                optionsBuilder.UseInMemoryDatabase("BookingTimes");
+
             }
         }
     }

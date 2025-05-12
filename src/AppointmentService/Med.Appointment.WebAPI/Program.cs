@@ -75,9 +75,10 @@ if (app.Environment.IsDevelopment())
 var endpointGroup = app
     .MapGroup("api/appointments");
 
-endpointGroup.MapPatch("reply/", [Authorize(Roles = "Doctor")] (ReplyAppointmentInput replyAppointment, IAppointmentService appointmentService) =>
+endpointGroup.MapPatch("reply/", [Authorize(Roles = "Doctor")]
+async (ReplyAppointmentInput replyAppointment, IAppointmentService appointmentService) =>
 {
-    appointmentService.ReplyAppointment(replyAppointment);
+    await appointmentService.ReplyAppointment(replyAppointment);
     return Results.Ok();
 })
 .WithTags("Appointments")
@@ -95,9 +96,10 @@ endpointGroup.MapPost(string.Empty, [Authorize(Roles = "Doctor,Patient")] async 
 .Produces<Created<Guid>>()
 .Produces<BadRequest>();
 
-endpointGroup.MapPatch("cancel/", [Authorize(Roles = "Patient")] (CancelAppointmentInput cancelAppointment, IAppointmentService appointmentService) =>
+endpointGroup.MapPatch("cancel/", [Authorize(Roles = "Patient")]
+async (CancelAppointmentInput cancelAppointment, IAppointmentService appointmentService) =>
 {
-    appointmentService.CancelAppointment(cancelAppointment);
+    await appointmentService.CancelAppointment(cancelAppointment);
     return Results.Ok();
 })
 .WithTags("Appointments")

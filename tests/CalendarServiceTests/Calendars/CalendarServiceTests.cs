@@ -63,7 +63,7 @@ namespace Med.CalendarTests
             // Assert
             result.IsSuccess.ShouldBeTrue();
             _calendarRepository.Received(1).CreateDoctorCalendar(Arg.Any<Calendar>());
-             _bookingTimeRepository.Received(1).CreateCalendarBookingTime(Arg.Any<List<BookingTime>>());
+            await _bookingTimeRepository.Received(1).CreateCalendarBookingTime(Arg.Any<List<BookingTime>>());
         }
 
 

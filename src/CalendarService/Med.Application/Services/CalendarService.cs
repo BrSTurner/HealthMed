@@ -41,7 +41,7 @@ namespace Med.Application.Services
                 return DomainResult.Error("Não foi possível criar o calendário!");
 
             var bookingEntities = input.BookingTime.Select(x => MapBookingTime(x, calendarEntity)).ToList();
-            _bookingTimeRepository.CreateCalendarBookingTime(bookingEntities);
+            await _bookingTimeRepository.CreateCalendarBookingTime(bookingEntities);
 
             var dto = MapCalendarDto(calendarEntity);
 
@@ -130,9 +130,26 @@ namespace Med.Application.Services
             var newBookingsTime = input.Bookings.Where(x => !x.Id.HasValue).Select(x => MapBookingTime(x, calendar)).ToList();  
             if(newBookingsTime.Count() > 0)
             {
-                _bookingTimeRepository.CreateCalendarBookingTime(newBookingsTime);
+                await _bookingTimeRepository.CreateCalendarBookingTime(newBookingsTime);
             }
- 
+
+            var oldBookingTime = input.Bookings.Where(x => x.Id.HasValue).Select(x => MapBookingTime(x, calendar)).ToList();
+
+            if (oldBookingTime.Count() > 0)
+            {
+                _bookingTimeRepository.UpdateCalendarBookingTime(oldBookingTime);
+            }
+
+            //input.Bookings.Where(x => x.Id.HasValue).Select(x => MapBookingTime(x, calendar)).ToList().ForEach(booking =>
+            //{
+            //    var entity = calendar.Bookings.FirstOrDefault(x => x.Id == booking.Id);
+            //    if (entity != null)
+            //    {
+            //        entity.Date = booking.Date;
+            //    }
+            //});
+
+
 
             if (await _unitOfWork.SaveChanges())
                 return DomainResult.Success();
@@ -144,6 +161,7 @@ namespace Med.Application.Services
         {
             return new BookingTime
             {
+                Id = input.Id.HasValue ? input.Id.Value : Guid.NewGuid(),
                 CalendarId = entity.Id,
                 CreatedAt = DateTime.Now,
                 Status = BookingTimeStatus.Available,

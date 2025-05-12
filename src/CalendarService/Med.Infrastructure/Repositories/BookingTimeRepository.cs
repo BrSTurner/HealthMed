@@ -15,7 +15,7 @@ namespace Med.Infrastructure.Repositories
             _entity = _context.Set<BookingTime>();
         }
 
-        public async void CreateCalendarBookingTime(List<BookingTime> bookingTimes)
+        public async Task CreateCalendarBookingTime(List<BookingTime> bookingTimes)
         {
             await _entity.AddRangeAsync(bookingTimes);
         }
@@ -23,6 +23,11 @@ namespace Med.Infrastructure.Repositories
         public async Task<BookingTime?> GetBookingTimeById(Guid id)
         {
             return await _entity.FindAsync(id);
+        }
+
+        public void UpdateCalendarBookingTime(List<BookingTime> bookingTimes)
+        {
+            _entity.UpdateRange(bookingTimes);
         }
     }
 }
