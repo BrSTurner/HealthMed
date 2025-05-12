@@ -1,4 +1,6 @@
-﻿using Med.Domain.Entities;
+﻿using MassTransit;
+using Med.Application.Consumers;
+using Med.Domain.Entities;
 using Med.Infrastructure.Data;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.Data.Sqlite;
@@ -26,9 +28,9 @@ namespace Med.Integration.Tests.Base
             {
                 builder.ConfigureServices(services =>
                 {
-
                     RemoveSQLServerProvider(services);
                     RegisterDatabase(services);
+                    RegisterMassTransit(services);
 
                     var sp = services.BuildServiceProvider();
                     ScopeFactory = sp.GetRequiredService<IServiceScopeFactory>();
@@ -88,6 +90,21 @@ namespace Med.Integration.Tests.Base
             }
 
             return user;
+        }
+
+        private static void RegisterMassTransit(IServiceCollection services)
+        {
+            var massTransitDescriptors = services
+                .Where(d => d.ImplementationType?.Namespace?.Contains("MassTransit") == true)
+                .ToList();
+
+            foreach (var descriptor in massTransitDescriptors)
+                services.Remove(descriptor);
+
+            services.AddMassTransitTestHarness(x =>
+            {
+                x.AddConsumer<AuthConsumer>();
+            });
         }
 
         public void Dispose()
