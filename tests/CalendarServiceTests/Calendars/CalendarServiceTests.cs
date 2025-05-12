@@ -118,7 +118,7 @@ namespace Med.CalendarTests
 
             // Assert
             result.Success.ShouldBeFalse();
-            result.ErrorMessage?.ShouldContain("não foi possível");
+            result.ErrorMessage?.ShouldContain("Horário selecionado não foi encontrado");
         }
 
         [Fact(DisplayName = "Update Doctor Calendar")]
